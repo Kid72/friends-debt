@@ -42,6 +42,7 @@ export const azTranslations = {
 
   // Expense Management & Split Modes
   'expense.add_title': 'Yeni xərc əlavə et',
+  'expense.add_receipt': 'Çek əlavə et',
   'expense.edit_title': 'Xərci redaktə et',
   'expense.delete_title': 'Xərci sil',
   'expense.delete_confirm': '"{title}" xərcini silmək istədiyinizə əminsiniz?',
@@ -243,6 +244,7 @@ export const ruTranslations: Record<TranslationKey, string> = {
 
   // Expense Management & Split Modes
   'expense.add_title': 'Добавить расход',
+  'expense.add_receipt': 'Добавить чек',
   'expense.edit_title': 'Редактировать расход',
   'expense.delete_title': 'Удалить расход',
   'expense.delete_confirm': 'Вы уверены, что хотите удалить расход «{title}»?',
@@ -442,6 +444,7 @@ export const enTranslations: Record<TranslationKey, string> = {
 
   // Expense Management & Split Modes
   'expense.add_title': 'Add expense',
+  'expense.add_receipt': 'Add receipt',
   'expense.edit_title': 'Edit expense',
   'expense.delete_title': 'Delete expense',
   'expense.delete_confirm': 'Are you sure you want to delete expense "{title}"?',
