@@ -11,7 +11,7 @@ import {
   PlusCircle,
 } from 'lucide-react';
 import { RoomState, Participant, Expense, SplitMode, SplitItem } from './types';
-import { createRoom, getActiveUserId, setActiveUserId } from './api/storage';
+import { createRoom, getActiveUserId, setActiveUserId, getLastRoomId, setLastRoomId } from './api/storage';
 import { useRoomStore } from './hooks/useRoomStore';
 import { I18nProvider, useI18n } from './i18n/I18nContext';
 import { Header } from './components/layout/Header';
@@ -52,14 +52,17 @@ export function AppContent() {
   const [roomId, setRoomId] = useState<string | null>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
-      return params.get('room');
+      const urlRoom = params.get('room');
+      if (urlRoom) return urlRoom;
+      // PWA home-screen launch: no ?room= in URL – restore the last-used room
+      return getLastRoomId();
     }
     return null;
   });
 
   const [isProvisioning, setIsProvisioning] = useState(false);
 
-  // Auto-provision room if no ?room in URL
+  // Auto-provision room if no ?room in URL and no saved room in localStorage
   useEffect(() => {
     if (!roomId && !isProvisioning) {
       setIsProvisioning(true);
@@ -99,6 +102,21 @@ export function AppContent() {
         });
     }
   }, [roomId, isProvisioning]);
+
+  // Persist roomId to localStorage so the PWA can restore it on home-screen launch.
+  // Also sync the URL when the room was restored from localStorage (no ?room= param).
+  useEffect(() => {
+    if (!roomId) return;
+    setLastRoomId(roomId);
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (!params.get('room')) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('room', roomId);
+        window.history.replaceState({ path: url.toString() }, '', url.toString());
+      }
+    }
+  }, [roomId]);
 
   // Sync with browser back/forward buttons
   useEffect(() => {

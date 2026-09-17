@@ -223,3 +223,27 @@ export function setStoredLanguage(lang: Language): void {
     console.warn('Failed to save language to localStorage:', err);
   }
 }
+
+/**
+ * PWA persistence: Returns the last room ID the user was in, so the PWA
+ * can restore it when launched from the home screen (no ?room= in URL).
+ */
+export function getLastRoomId(): string | null {
+  try {
+    return localStorage.getItem(`${STORAGE_PREFIX}last_room`) || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * PWA persistence: Saves the current room ID so the PWA can restore it
+ * on the next home-screen launch.
+ */
+export function setLastRoomId(roomId: string): void {
+  try {
+    localStorage.setItem(`${STORAGE_PREFIX}last_room`, roomId);
+  } catch (err) {
+    console.warn('Failed to save last room ID to localStorage:', err);
+  }
+}
