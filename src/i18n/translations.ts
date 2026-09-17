@@ -1,0 +1,541 @@
+import { Language } from '../types';
+
+export const azTranslations = {
+  // App Header & Branding
+  'app.title': 'Dostlar Xərcləri',
+  'app.subtitle': 'Dostlar arasında xərclərin və borcların asan bölünməsi',
+  'app.short_desc': 'Şifrəsiz, qeydiyyatsız, WhatsApp üçün nəzərdə tutulmuş qrup xərc izləyicisi',
+
+  // Navigation Tabs
+  'nav.transfers': 'Köçürmələr',
+  'nav.history': 'Tarixçə',
+  'nav.hall_of_fame': 'Şərəf Lövhəsi',
+
+  // Header & Controls
+  'header.my_profile': 'Mən',
+  'header.select_profile': 'Profil seçin',
+  'header.all_participants': 'Hamı',
+  'header.share_room': 'Qrupu paylaş',
+  'header.room_copied': 'Qrup linki kopyalandı!',
+  'header.notifications': 'Bildirişlər',
+  'header.notifications_enabled': 'Bildirişlər aktivdir',
+  'header.notifications_blocked': 'Bildirişlərə icazə verilməyib',
+  'header.help': 'Kömək',
+  'header.language': 'Dil',
+  'header.group': 'Qrup',
+  'header.edit_group': 'Qrup adını dəyiş',
+  'header.currency': 'Valyuta',
+  'header.change_currency': 'Valyutanı dəyiş',
+  'header.add_friend': 'Dost əlavə et',
+
+  // Balances & Hero Card
+  'balance.you_are_owed': 'Sizə borcludurlar',
+  'balance.you_owe': 'Sizin borcunuz var',
+  'balance.settled': 'Balans təmizdir',
+  'balance.total_spent': 'Ümumi xərc',
+  'balance.your_share': 'Sizin payınız',
+  'balance.your_paid': 'Sizin ödədiyiniz',
+  'balance.net_balance': 'Xalis balans',
+  'balance.no_expenses': 'Hələlik heç bir xərc qeyd olunmayıb',
+  'balance.active_user': 'Aktiv şəxs',
+  'balance.all_participants_view': 'Ümumi baxış (Bütün qrup)',
+
+  // Expense Management & Split Modes
+  'expense.add_title': 'Yeni xərc əlavə et',
+  'expense.edit_title': 'Xərci redaktə et',
+  'expense.delete_title': 'Xərci sil',
+  'expense.delete_confirm': '"{title}" xərcini silmək istədiyinizə əminsiniz?',
+  'expense.title_label': 'Xərcin təsviri / adı',
+  'expense.title_placeholder': 'Məs., Tarqovıda axşam yeməyi, Taksi',
+  'expense.amount_label': 'Məbləğ',
+  'expense.amount_placeholder': '0.00',
+  'expense.payer_label': 'Kim ödədi?',
+  'expense.date_label': 'Tarix',
+  'expense.split_mode': 'Bölünmə növü',
+  'expense.split_equal': 'Bərabər böl',
+  'expense.split_custom': 'Dəqiq məbləğlərlə böl',
+  'expense.involved_label': 'Kimlər üçün bölünsün?',
+  'expense.select_all': 'Hamısını seç',
+  'expense.deselect_all': 'Seçimi ləğv et',
+  'expense.save': 'Yadda saxla',
+  'expense.cancel': 'Ləğv et',
+  'expense.delete': 'Sil',
+  'expense.payer': 'Ödəyən',
+  'expense.custom_split_error': 'Daxil edilmiş məbləğlərin cəmi ({sum}) ümumi məbləğə ({total}) bərabər olmalıdır',
+  'expense.no_participants_selected': 'Ən azı bir iştirakçı seçilməlidir',
+  'expense.empty_title_error': 'Xərcin adını daxil edin',
+  'expense.invalid_amount_error': 'Düzgün məbləğ daxil edin',
+
+  // Settle Debt Dialog
+  'settle.title': 'Borcu bağla',
+  'settle.confirm_question': '{debtor} tərəfindən {receiver} şəxsinə {amount} məbləğində ödənişi təsdiqləyirsiniz?',
+  'settle.confirm_button': 'Ödənişi təsdiqlə',
+  'settle.settled_success': 'Borc uğurla bağlandı!',
+  'settle.success_msg': '{debtor} tərəfindən {receiver} şəxsinə {amount} ödənildi və borc bağlandı.',
+  'settle.share_whatsapp': 'WhatsApp ilə paylaş',
+  'settle.all_settled': 'Bütün borclar bağlanıb! Heç kimin heç kimə borcu yoxdur 🎉',
+  'settle.optimized_transfers': 'Optimallaşdırılmış köçürmələr',
+  'settle.how_it_simplified': 'Borclar necə optimallaşdırıldı?',
+  'settle.direct_transfer': 'Birbaşa köçürmə',
+  'settle.mark_paid': 'Ödənildi kimi qeyd et',
+  'settle.share_summary': 'Ümumi hesabatı paylaş',
+
+  // WhatsApp Deep Linking Templates
+  'whatsapp.settle_title': '✅ Borc bağlandı!',
+  'whatsapp.settle_body': '💸 {debtor} ➡️ {amount} {currency} ➡️ {receiver}\nYığıncaq balansı yeniləndi.\n🔗 {url}',
+  'whatsapp.summary_header': '🍻 Yığıncaq nəticələri: {groupName}',
+  'whatsapp.summary_total': '💰 Ümumi hesab: {total} {currency}',
+  'whatsapp.summary_paid_by': ' (ödədi: {payer})',
+  'whatsapp.summary_transfers_title': '📋 Kim kimə köçürür (optimallaşdırılmış):',
+  'whatsapp.summary_transfer_item': '• {from} ➡️ {amount} {currency} ➡️ {to}',
+  'whatsapp.summary_link': '🔗 Balansı yoxlamaq və borcları bağlamaq: {url}',
+
+  // Hall of Fame & Badges
+  'hall_of_fame.title': 'Şərəf Lövhəsi',
+  'hall_of_fame.subtitle': 'Dostlar qrupunun əyləncəli statistika və titulları',
+  'hall_of_fame.no_badges': 'Titullar üçün kifayət qədər məlumat yoxdur',
+  'hall_of_fame.earned_by': 'Qazandı: {name}',
+  'hall_of_fame.stats_title': 'Qrup statistikası',
+  'hall_of_fame.total_expenses_count': 'Ümumi xərc sayı',
+  'hall_of_fame.total_settlements_count': 'Bağlanmış borclar',
+  'badge.sponsor.title': 'Gecənin sponsoru',
+  'badge.sponsor.desc': 'Yığıncaqda ən çox xərc çəkən iştirakçı',
+  'badge.lightning.title': 'İldırım ödəyici',
+  'badge.lightning.desc': 'Borclarını ən tez və ən çox bağlayan iştirakçı',
+  'badge.tomorrow.title': '"Sabah ataram" bəy',
+  'badge.tomorrow.desc': 'Ən köhnə ödənməmiş borcu olan iştirakçı',
+  'badge.party.title': 'Məclisin canı',
+  'badge.party.desc': 'Ən çox sayda xərcdə iştirak edən şəxs',
+
+  // Help & Info Modal
+  'help.title': 'Məlumat və Təlimat',
+  'help.how_it_works_title': 'Necə işləyir?',
+  'help.how_it_works_desc': '1. Qrup yaradın və linki dostlarınıza göndərin.\n2. Kim nə ödəyibsə xərc kimi əlavə edin.\n3. Alqoritm borcları avtomatik hesablayır və minimum əməliyyatla bağlamağı təklif edir.',
+  'help.debt_simplification_title': 'Borcların sadələşdirilməsi alqoritmi',
+  'help.debt_simplification_desc': 'Əgər Əli Vəliyə 10 ₼, Vəli isə Məmmədə 10 ₼ borcludursa, sistem Vəlini aradan çıxarır və Əlinin birbaşa Məmmədə 10 ₼ ödəməsini təklif edir. Bu, bank köçürmələrinin və komissiyaların sayını kəskin azaldır.',
+  'help.pwa_install_title': 'Tətbiqi quraşdırın (PWA)',
+  'help.pwa_ios_desc': "iOS (Safari): Ekranın aşağısındakı 'Paylaş' (Share) düyməsinə vurun və 'Əsas ekrana əlavə et' (Add to Home Screen) seçin.",
+  'help.pwa_android_desc': "Android (Chrome): Brauzerin menyu düyməsinə (üç nöqtə) vurun və 'Tətbiqi quraşdır' və ya 'Əsas ekrana əlavə et' seçin.",
+  'help.trust_privacy_title': 'Şifrəsiz etibar modeli və Məxfilik',
+  'help.trust_privacy_desc': 'Tətbiqdə qeydiyyat və şifrə tələb olunmur — bu yaxın dostlar arasında qarşılıqlı etimada əsaslanır. Qrup linkinə malik hər kəs xərcləri görə və əlavə edə bilər. Şəxsi bank məlumatlarınız heç vaxt saxlanılmır.',
+
+  // Sync States & Error Messages
+  'sync.synced': 'Sinxronlaşdırıldı',
+  'sync.syncing': 'Sinxronlaşdırılır...',
+  'sync.offline': 'Oflayn rejim',
+  'sync.error': 'Yadda saxlanılarkən xəta baş verdi',
+  'sync.retry': 'Yenidən cəhd et',
+  'error.generic': 'Xəta baş verdi. Zəhmət olmasa bir az sonra yenidən cəhd edin.',
+  'error.room_not_found': 'Qrup tapılmadı',
+  'error.network': 'İnternet bağlantısı kəsilib',
+  'error.validation': 'Məlumatları düzgün daxil edin',
+
+  // Participants & Room Setup
+  'participant.add_title': 'Yeni dost əlavə et',
+  'participant.name_label': 'Adı',
+  'participant.name_placeholder': 'Məs., Elvin',
+  'participant.color_label': 'Rəng',
+  'participant.add_button': 'Əlavə et',
+  'participant.list_title': 'İştirakçılar',
+  'participant.already_exists': 'Bu adda iştirakçı artıq var',
+  'room.create_title': 'Yeni Qrup Yarat',
+  'room.name_label': 'Qrupun adı',
+  'room.name_placeholder': 'Məs., Şamaxı səfəri, Cümə axşamı',
+  'room.create_button': 'Qrup yarat',
+  'room.join_title': 'Mövcud qrupa qoşul',
+  'room.join_placeholder': 'Qrup kodunu daxil edin',
+  'room.join_button': 'Qoşul',
+  'room.currency_title': 'Valyuta seçimi',
+  'room.currency_label': 'Valyuta simvolu',
+
+  // History Tab
+  'history.title': 'Xərclər və ödənişlər tarixçəsi',
+  'history.empty': 'Heç bir xərc və ya ödəniş tapılmadı',
+  'history.all_filter': 'Hamısı',
+  'history.expenses_filter': 'Xərclər',
+  'history.settlements_filter': 'Borc bağlamaları',
+  'history.settled_badge': 'Borc ödənildi',
+
+  // Common UI Actions
+  'common.save': 'Yadda saxla',
+  'common.cancel': 'Ləğv et',
+  'common.delete': 'Sil',
+  'common.edit': 'Düzəliş et',
+  'common.close': 'Bağla',
+  'common.loading': 'Yüklənir...',
+  'common.copy': 'Kopyala',
+  'common.copied': 'Kopyalandı!',
+  'common.back': 'Geri',
+  'common.next': 'Növbəti',
+  'common.finish': 'Tamamla',
+};
+
+export type TranslationKey = keyof typeof azTranslations;
+
+export const ruTranslations: Record<TranslationKey, string> = {
+  // App Header & Branding
+  'app.title': 'Расходы друзей',
+  'app.subtitle': 'Удобный учет совместных расходов и долгов',
+  'app.short_desc': 'Простой учет расходов без паролей и регистрации для групп WhatsApp',
+
+  // Navigation Tabs
+  'nav.transfers': 'Переводы',
+  'nav.history': 'История',
+  'nav.hall_of_fame': 'Доска почета',
+
+  // Header & Controls
+  'header.my_profile': 'Я',
+  'header.select_profile': 'Выберите профиль',
+  'header.all_participants': 'Все',
+  'header.share_room': 'Поделиться группой',
+  'header.room_copied': 'Ссылка на группу скопирована!',
+  'header.notifications': 'Уведомления',
+  'header.notifications_enabled': 'Уведомления включены',
+  'header.notifications_blocked': 'Уведомления заблокированы',
+  'header.help': 'Помощь',
+  'header.language': 'Язык',
+  'header.group': 'Группа',
+  'header.edit_group': 'Изменить название группы',
+  'header.currency': 'Валюта',
+  'header.change_currency': 'Изменить валюту',
+  'header.add_friend': 'Добавить друга',
+
+  // Balances & Hero Card
+  'balance.you_are_owed': 'Вам должны',
+  'balance.you_owe': 'Вы должны',
+  'balance.settled': 'Баланс чист',
+  'balance.total_spent': 'Общие расходы',
+  'balance.your_share': 'Ваша доля',
+  'balance.your_paid': 'Вы оплатили',
+  'balance.net_balance': 'Чистый баланс',
+  'balance.no_expenses': 'Расходов пока нет',
+  'balance.active_user': 'Активный профиль',
+  'balance.all_participants_view': 'Общий обзор (Вся группа)',
+
+  // Expense Management & Split Modes
+  'expense.add_title': 'Добавить расход',
+  'expense.edit_title': 'Редактировать расход',
+  'expense.delete_title': 'Удалить расход',
+  'expense.delete_confirm': 'Вы уверены, что хотите удалить расход «{title}»?',
+  'expense.title_label': 'Название расхода',
+  'expense.title_placeholder': 'Напр., Ужин в ресторане, Такси',
+  'expense.amount_label': 'Сумма',
+  'expense.amount_placeholder': '0.00',
+  'expense.payer_label': 'Кто оплатил?',
+  'expense.date_label': 'Дата',
+  'expense.split_mode': 'Способ разделения',
+  'expense.split_equal': 'Поровну',
+  'expense.split_custom': 'Точные суммы',
+  'expense.involved_label': 'Кто участвует?',
+  'expense.select_all': 'Выбрать всех',
+  'expense.deselect_all': 'Снять выбор',
+  'expense.save': 'Сохранить',
+  'expense.cancel': 'Отмена',
+  'expense.delete': 'Удалить',
+  'expense.payer': 'Оплатил(а)',
+  'expense.custom_split_error': 'Сумма долей ({sum}) должна совпадать с общей суммой ({total})',
+  'expense.no_participants_selected': 'Выберите хотя бы одного участника',
+  'expense.empty_title_error': 'Введите название расхода',
+  'expense.invalid_amount_error': 'Введите корректную сумму',
+
+  // Settle Debt Dialog
+  'settle.title': 'Погасить долг',
+  'settle.confirm_question': 'Подтвердить перевод {amount} от {debtor} в пользу {receiver}?',
+  'settle.confirm_button': 'Подтвердить оплату',
+  'settle.settled_success': 'Долг успешно погашен!',
+  'settle.success_msg': '{debtor} перевел(а) {receiver} {amount}. Долг закрыт.',
+  'settle.share_whatsapp': 'Поделиться в WhatsApp',
+  'settle.all_settled': 'Все долги закрыты! Никто никому ничего не должен 🎉',
+  'settle.optimized_transfers': 'Оптимизированные переводы',
+  'settle.how_it_simplified': 'Как оптимизированы долги?',
+  'settle.direct_transfer': 'Прямой перевод',
+  'settle.mark_paid': 'Отметить как оплачено',
+  'settle.share_summary': 'Поделиться итогами',
+
+  // WhatsApp Deep Linking Templates
+  'whatsapp.settle_title': '✅ Долг закрыт!',
+  'whatsapp.settle_body': '💸 {debtor} ➡️ {amount} {currency} ➡️ {receiver}\nБаланс группы обновлен.\n🔗 {url}',
+  'whatsapp.summary_header': '🍻 Итоги встречи: {groupName}',
+  'whatsapp.summary_total': '💰 Общий счет: {total} {currency}',
+  'whatsapp.summary_paid_by': ' (оплатил: {payer})',
+  'whatsapp.summary_transfers_title': '📋 Кто кому переводит (оптимизировано):',
+  'whatsapp.summary_transfer_item': '• {from} ➡️ {amount} {currency} ➡️ {to}',
+  'whatsapp.summary_link': '🔗 Проверить баланс и закрыть долги: {url}',
+
+  // Hall of Fame & Badges
+  'hall_of_fame.title': 'Доска почета',
+  'hall_of_fame.subtitle': 'Веселая статистика и достижения компании',
+  'hall_of_fame.no_badges': 'Недостаточно данных для наград',
+  'hall_of_fame.earned_by': 'Получил(а): {name}',
+  'hall_of_fame.stats_title': 'Статистика группы',
+  'hall_of_fame.total_expenses_count': 'Количество чеков',
+  'hall_of_fame.total_settlements_count': 'Закрытых долгов',
+  'badge.sponsor.title': 'Спонсор вечера',
+  'badge.sponsor.desc': 'Участник с наибольшей суммой оплат',
+  'badge.lightning.title': 'Молниеносный плательщик',
+  'badge.lightning.desc': 'Быстрее и чаще всех закрывает свои долги',
+  'badge.tomorrow.title': 'Мистер "Завтра скину"',
+  'badge.tomorrow.desc': 'Участник с самым старым непогашенным долгом',
+  'badge.party.title': 'Душа компании',
+  'badge.party.desc': 'Участвовал(а) в наибольшем числе общих чеков',
+
+  // Help & Info Modal
+  'help.title': 'Справка и руководство',
+  'help.how_it_works_title': 'Как это работает?',
+  'help.how_it_works_desc': '1. Создайте группу и отправьте ссылку друзьям.\n2. Вносите расходы по мере их появления.\n3. Алгоритм автоматически рассчитает балансы и сведет расчеты к минимуму.',
+  'help.debt_simplification_title': 'Упрощение расчетов (Min Cash Flow)',
+  'help.debt_simplification_desc': 'Если Али должен Вели 10 ₼, а Вели должен Мамеду 10 ₼, алгоритм исключает Вели: Али переводит 10 ₼ напрямую Мамеду. Это избавляет от лишних транзакций.',
+  'help.pwa_install_title': 'Установка приложения (PWA)',
+  'help.pwa_ios_desc': 'iOS (Safari): Нажмите кнопку «Поделиться» (Share) внизу экрана и выберите «На экран Домой» (Add to Home Screen).',
+  'help.pwa_android_desc': 'Android (Chrome): Нажмите меню браузера (три точки) и выберите «Установить приложение» или «Добавить на главный экран».',
+  'help.trust_privacy_title': 'Модель доверия без паролей и Приватность',
+  'help.trust_privacy_desc': 'Никаких паролей и регистраций — приложение построено на доверии между близкими друзьями. Любой, у кого есть ссылка, может просматривать и добавлять чеки. Банковские данные не хранятся.',
+
+  // Sync States & Error Messages
+  'sync.synced': 'Синхронизировано',
+  'sync.syncing': 'Синхронизация...',
+  'sync.offline': 'Офлайн-режим',
+  'sync.error': 'Ошибка синхронизации',
+  'sync.retry': 'Повторить',
+  'error.generic': 'Произошла ошибка. Пожалуйста, попробуйте позже.',
+  'error.room_not_found': 'Группа не найдена',
+  'error.network': 'Нет подключения к интернету',
+  'error.validation': 'Пожалуйста, проверьте данные',
+
+  // Participants & Room Setup
+  'participant.add_title': 'Добавить друга',
+  'participant.name_label': 'Имя',
+  'participant.name_placeholder': 'Напр., Эльвин',
+  'participant.color_label': 'Цвет',
+  'participant.add_button': 'Добавить',
+  'participant.list_title': 'Участники',
+  'participant.already_exists': 'Участник с таким именем уже есть',
+  'room.create_title': 'Создать новую группу',
+  'room.name_label': 'Название группы',
+  'room.name_placeholder': 'Напр., Поездка в Шамаху',
+  'room.create_button': 'Создать группу',
+  'room.join_title': 'Присоединиться к группе',
+  'room.join_placeholder': 'Введите код группы',
+  'room.join_button': 'Присоединиться',
+  'room.currency_title': 'Выбор валюты',
+  'room.currency_label': 'Символ валюты',
+
+  // History Tab
+  'history.title': 'История расходов и выплат',
+  'history.empty': 'История пуста',
+  'history.all_filter': 'Все',
+  'history.expenses_filter': 'Расходы',
+  'history.settlements_filter': 'Выплаты',
+  'history.settled_badge': 'Долг оплачен',
+
+  // Common UI Actions
+  'common.save': 'Сохранить',
+  'common.cancel': 'Отмена',
+  'common.delete': 'Удалить',
+  'common.edit': 'Редактировать',
+  'common.close': 'Закрыть',
+  'common.loading': 'Загрузка...',
+  'common.copy': 'Копировать',
+  'common.copied': 'Скопировано!',
+  'common.back': 'Назад',
+  'common.next': 'Далее',
+  'common.finish': 'Готово',
+};
+
+export const enTranslations: Record<TranslationKey, string> = {
+  // App Header & Branding
+  'app.title': 'Friends Expenses',
+  'app.subtitle': 'Easy expense splitting and debt settlement among friends',
+  'app.short_desc': 'Zero-backend, zero-auth group expense tracker designed for WhatsApp groups',
+
+  // Navigation Tabs
+  'nav.transfers': 'Transfers',
+  'nav.history': 'History',
+  'nav.hall_of_fame': 'Hall of Fame',
+
+  // Header & Controls
+  'header.my_profile': 'Me',
+  'header.select_profile': 'Select profile',
+  'header.all_participants': 'Everyone',
+  'header.share_room': 'Share group',
+  'header.room_copied': 'Group link copied!',
+  'header.notifications': 'Notifications',
+  'header.notifications_enabled': 'Notifications enabled',
+  'header.notifications_blocked': 'Notifications blocked',
+  'header.help': 'Help',
+  'header.language': 'Language',
+  'header.group': 'Group',
+  'header.edit_group': 'Edit group name',
+  'header.currency': 'Currency',
+  'header.change_currency': 'Change currency',
+  'header.add_friend': 'Add friend',
+
+  // Balances & Hero Card
+  'balance.you_are_owed': 'You are owed',
+  'balance.you_owe': 'You owe',
+  'balance.settled': 'All settled up',
+  'balance.total_spent': 'Total expenses',
+  'balance.your_share': 'Your share',
+  'balance.your_paid': 'You paid',
+  'balance.net_balance': 'Net balance',
+  'balance.no_expenses': 'No expenses recorded yet',
+  'balance.active_user': 'Active profile',
+  'balance.all_participants_view': 'Overview (All group)',
+
+  // Expense Management & Split Modes
+  'expense.add_title': 'Add expense',
+  'expense.edit_title': 'Edit expense',
+  'expense.delete_title': 'Delete expense',
+  'expense.delete_confirm': 'Are you sure you want to delete expense "{title}"?',
+  'expense.title_label': 'Expense title / description',
+  'expense.title_placeholder': 'e.g., Dinner, Taxi',
+  'expense.amount_label': 'Amount',
+  'expense.amount_placeholder': '0.00',
+  'expense.payer_label': 'Who paid?',
+  'expense.date_label': 'Date',
+  'expense.split_mode': 'Split mode',
+  'expense.split_equal': 'Split equally',
+  'expense.split_custom': 'Custom amounts',
+  'expense.involved_label': 'Who participated?',
+  'expense.select_all': 'Select all',
+  'expense.deselect_all': 'Deselect all',
+  'expense.save': 'Save',
+  'expense.cancel': 'Cancel',
+  'expense.delete': 'Delete',
+  'expense.payer': 'Payer',
+  'expense.custom_split_error': 'Sum of custom splits ({sum}) must match total amount ({total})',
+  'expense.no_participants_selected': 'Please select at least one participant',
+  'expense.empty_title_error': 'Please enter expense title',
+  'expense.invalid_amount_error': 'Please enter a valid amount',
+
+  // Settle Debt Dialog
+  'settle.title': 'Settle debt',
+  'settle.confirm_question': 'Confirm payment of {amount} from {debtor} to {receiver}?',
+  'settle.confirm_button': 'Confirm payment',
+  'settle.settled_success': 'Debt successfully settled!',
+  'settle.success_msg': '{debtor} paid {amount} to {receiver}. Debt settled.',
+  'settle.share_whatsapp': 'Share via WhatsApp',
+  'settle.all_settled': 'All debts are settled! Nobody owes anything 🎉',
+  'settle.optimized_transfers': 'Optimized transfers',
+  'settle.how_it_simplified': 'How debts were simplified',
+  'settle.direct_transfer': 'Direct transfer',
+  'settle.mark_paid': 'Mark as paid',
+  'settle.share_summary': 'Share gathering summary',
+
+  // WhatsApp Deep Linking Templates
+  'whatsapp.settle_title': '✅ Debt settled!',
+  'whatsapp.settle_body': '💸 {debtor} ➡️ {amount} {currency} ➡️ {receiver}\nGroup balance updated.\n🔗 {url}',
+  'whatsapp.summary_header': '🍻 Gathering summary: {groupName}',
+  'whatsapp.summary_total': '💰 Total bill: {total} {currency}',
+  'whatsapp.summary_paid_by': ' (paid by: {payer})',
+  'whatsapp.summary_transfers_title': '📋 Who pays whom (optimized):',
+  'whatsapp.summary_transfer_item': '• {from} ➡️ {amount} {currency} ➡️ {to}',
+  'whatsapp.summary_link': '🔗 Check balance and settle debts: {url}',
+
+  // Hall of Fame & Badges
+  'hall_of_fame.title': 'Hall of Fame',
+  'hall_of_fame.subtitle': 'Fun stats and achievements of your group',
+  'hall_of_fame.no_badges': 'Not enough data for badges yet',
+  'hall_of_fame.earned_by': 'Earned by: {name}',
+  'hall_of_fame.stats_title': 'Group statistics',
+  'hall_of_fame.total_expenses_count': 'Total expenses count',
+  'hall_of_fame.total_settlements_count': 'Settled debts count',
+  'badge.sponsor.title': 'Sponsor of the Night',
+  'badge.sponsor.desc': 'Participant who paid the highest total amount',
+  'badge.lightning.title': 'Lightning Settler',
+  'badge.lightning.desc': 'Participant who settles debts fastest and most frequently',
+  'badge.tomorrow.title': '"I\'ll pay tomorrow" Sir',
+  'badge.tomorrow.desc': 'Participant with the oldest outstanding debt',
+  'badge.party.title': 'Life of the Party',
+  'badge.party.desc': 'Participant involved in the most gathering expenses',
+
+  // Help & Info Modal
+  'help.title': 'Help & Guide',
+  'help.how_it_works_title': 'How it works',
+  'help.how_it_works_desc': '1. Create a group and share the link with friends.\n2. Record expenses as they happen.\n3. The algorithm calculates balances and minimizes settlement transactions.',
+  'help.debt_simplification_title': 'Debt simplification algorithm',
+  'help.debt_simplification_desc': 'If Alice owes Bob $10, and Bob owes Charlie $10, the algorithm eliminates Bob: Alice pays $10 directly to Charlie. This minimizes total bank transfers.',
+  'help.pwa_install_title': 'Install App (PWA)',
+  'help.pwa_ios_desc': "iOS (Safari): Tap the Share button at the bottom and select 'Add to Home Screen'.",
+  'help.pwa_android_desc': "Android (Chrome): Tap the browser menu (three dots) and select 'Install app' or 'Add to Home screen'.",
+  'help.trust_privacy_title': 'Passwordless Trust Model & Privacy',
+  'help.trust_privacy_desc': 'No passwords or signups required — built on mutual trust among friends. Anyone with the room link can view and add expenses. Bank details are never stored.',
+
+  // Sync States & Error Messages
+  'sync.synced': 'Synced',
+  'sync.syncing': 'Syncing...',
+  'sync.offline': 'Offline mode',
+  'sync.error': 'Sync error',
+  'sync.retry': 'Retry',
+  'error.generic': 'An error occurred. Please try again later.',
+  'error.room_not_found': 'Group not found',
+  'error.network': 'Network connection lost',
+  'error.validation': 'Please check your input',
+
+  // Participants & Room Setup
+  'participant.add_title': 'Add new friend',
+  'participant.name_label': 'Name',
+  'participant.name_placeholder': 'e.g., Elvin',
+  'participant.color_label': 'Color',
+  'participant.add_button': 'Add',
+  'participant.list_title': 'Participants',
+  'participant.already_exists': 'Participant with this name already exists',
+  'room.create_title': 'Create New Group',
+  'room.name_label': 'Group name',
+  'room.name_placeholder': 'e.g., Weekend trip',
+  'room.create_button': 'Create group',
+  'room.join_title': 'Join existing group',
+  'room.join_placeholder': 'Enter group code',
+  'room.join_button': 'Join',
+  'room.currency_title': 'Select currency',
+  'room.currency_label': 'Currency symbol',
+
+  // History Tab
+  'history.title': 'Expenses & settlements history',
+  'history.empty': 'No expenses or settlements found',
+  'history.all_filter': 'All',
+  'history.expenses_filter': 'Expenses',
+  'history.settlements_filter': 'Settlements',
+  'history.settled_badge': 'Debt settled',
+
+  // Common UI Actions
+  'common.save': 'Save',
+  'common.cancel': 'Cancel',
+  'common.delete': 'Delete',
+  'common.edit': 'Edit',
+  'common.close': 'Close',
+  'common.loading': 'Loading...',
+  'common.copy': 'Copy',
+  'common.copied': 'Copied!',
+  'common.back': 'Back',
+  'common.next': 'Next',
+  'common.finish': 'Done',
+};
+
+export const translations: Record<Language, Record<TranslationKey, string>> = {
+  az: azTranslations,
+  ru: ruTranslations,
+  en: enTranslations,
+};
+
+/**
+ * Retrieves translated text by language code and key with dynamic parameter interpolation.
+ * Falls back to Azerbaijani ('az') if key is missing in chosen language, or key itself if missing everywhere.
+ */
+export function getTranslation(
+  lang: Language,
+  key: string,
+  params?: Record<string, string | number>
+): string {
+  const selectedLang = (lang === 'az' || lang === 'ru' || lang === 'en') ? lang : 'az';
+  const langDict = translations[selectedLang] || translations.az;
+  let text = langDict[key as TranslationKey] || translations.az[key as TranslationKey] || key;
+
+  if (params && typeof params === 'object') {
+    for (const [paramKey, paramVal] of Object.entries(params)) {
+      text = text.split(`{${paramKey}}`).join(String(paramVal));
+    }
+  }
+
+  return text;
+}
