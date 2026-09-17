@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 
 // Polyfill localStorage for Node 22+ / jsdom environments where experimental localStorage is disabled
 const createStorageMock = () => {
@@ -33,4 +34,16 @@ if (typeof window !== 'undefined') {
     writable: true,
     configurable: true,
   });
+
+  if (!navigator.clipboard) {
+    Object.defineProperty(navigator, 'clipboard', {
+      value: {
+        writeText: vi.fn().mockResolvedValue(undefined),
+        readText: vi.fn().mockResolvedValue(''),
+      },
+      writable: true,
+      configurable: true,
+    });
+  }
 }
+
