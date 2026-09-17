@@ -122,7 +122,7 @@ describe('Storage API', () => {
       expect(global.fetch).toHaveBeenCalledWith(
         expect.stringContaining('test-room'),
         expect.objectContaining({
-          method: 'POST',
+          method: 'PUT',
           headers: expect.objectContaining({
             'Content-Type': 'application/json'
           }),

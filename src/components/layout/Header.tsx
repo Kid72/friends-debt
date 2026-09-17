@@ -7,6 +7,7 @@ import {
   BellOff,
   HelpCircle,
   Plus,
+  FolderPlus,
   Coins,
   Users,
   RefreshCw,
@@ -30,6 +31,7 @@ export interface HeaderProps {
   onUpdateCurrency?: (currency: string) => void | Promise<any>;
   onOpenHelp?: () => void;
   onEditGroupName?: () => void;
+  onCreateNewRoom?: () => void;
   isSyncing?: boolean;
   className?: string;
 }
@@ -45,6 +47,7 @@ export const Header: React.FC<HeaderProps> = ({
   onUpdateCurrency,
   onOpenHelp,
   onEditGroupName,
+  onCreateNewRoom,
   isSyncing = false,
   className,
 }) => {
@@ -399,6 +402,25 @@ export const Header: React.FC<HeaderProps> = ({
                     >
                       <Plus className="w-4 h-4" />
                       <span>{t('header.add_friend')}</span>
+                    </button>
+                  </>
+                )}
+
+                {/* Create New Group shortcut */}
+                {onCreateNewRoom && (
+                  <>
+                    <div className="my-1 border-t border-md-outline/10" />
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setIsProfileMenuOpen(false);
+                        onCreateNewRoom();
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-md-on-surface-variant hover:bg-md-surface-container-high transition-colors"
+                    >
+                      <FolderPlus className="w-4 h-4" />
+                      <span>{t('room.create_new')}</span>
                     </button>
                   </>
                 )}

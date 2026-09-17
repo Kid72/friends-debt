@@ -72,10 +72,8 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
     }
 
     const cached = getCachedRoomState(roomId);
-    if (cached) {
-      setRoom(cached);
-      roomRef.current = cached;
-    }
+    setRoom(cached);
+    roomRef.current = cached;
 
     let isMounted = true;
     setIsLoading(true);

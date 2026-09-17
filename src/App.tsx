@@ -8,6 +8,7 @@ import {
   AlertCircle,
   RefreshCw,
   Loader2,
+  PlusCircle,
 } from 'lucide-react';
 import { RoomState, Participant, Expense, SplitMode, SplitItem } from './types';
 import { createRoom, getActiveUserId, setActiveUserId } from './api/storage';
@@ -35,11 +36,7 @@ const DEFAULT_INITIAL_ROOM: RoomState = {
   id: '',
   groupName: 'Dostlar',
   currency: '₼',
-  participants: [
-    { id: 'p1', name: 'Elvin', avatarColor: '#006A60' },
-    { id: 'p2', name: 'Rauf', avatarColor: '#456179' },
-    { id: 'p3', name: 'Çingiz', avatarColor: '#705D00' },
-  ],
+  participants: [],
   expenses: [],
   settlements: [],
   updatedAt: Date.now(),
@@ -79,6 +76,17 @@ export function AppContent() {
         .catch(() => {
           // Offline / network outage fallback: local room id
           const fallbackId = `local_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`;
+          const initialLocalRoom: RoomState = {
+            ...DEFAULT_INITIAL_ROOM,
+            id: fallbackId,
+            updatedAt: Date.now(),
+          };
+          // Seed localStorage so initial render and offline usage load seamlessly
+          try {
+            localStorage.setItem(`friends_debt_room_${fallbackId}`, JSON.stringify(initialLocalRoom));
+          } catch {
+            // Ignore storage errors
+          }
           setRoomId(fallbackId);
           if (typeof window !== 'undefined') {
             const url = new URL(window.location.href);
@@ -187,6 +195,7 @@ export function AppContent() {
   const [isHelpDialogOpen, setIsHelpDialogOpen] = useState(false);
   const [isEditGroupNameOpen, setIsEditGroupNameOpen] = useState(false);
   const [newGroupNameInput, setNewGroupNameInput] = useState('');
+  const [isConfirmNewRoomOpen, setIsConfirmNewRoomOpen] = useState(false);
 
   // Open Edit Group Name Dialog
   const handleOpenEditGroupName = () => {
@@ -249,6 +258,16 @@ export function AppContent() {
     await settleDebt(settlement);
   };
 
+  // Handle Create / Reset to a fresh room
+  const handleCreateNewRoom = () => {
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('room');
+      window.history.pushState({}, '', url.pathname);
+    }
+    setRoomId(null);
+  };
+
   // Safe Participants & Expenses lists
   const participants = room?.participants || [];
   const expenses = room?.expenses || [];
@@ -270,6 +289,7 @@ export function AppContent() {
         onUpdateCurrency={updateCurrency}
         onOpenHelp={() => setIsHelpDialogOpen(true)}
         onEditGroupName={handleOpenEditGroupName}
+        onCreateNewRoom={room ? () => setIsConfirmNewRoomOpen(true) : undefined}
         isSyncing={isSyncing}
       />
 
@@ -285,7 +305,7 @@ export function AppContent() {
         </div>
       )}
 
-      {error && !isOffline && !isStoreOffline && (
+      {error && !isOffline && !isStoreOffline && room && (
         <div
           role="alert"
           className="bg-rose-600 text-white px-4 py-2 text-xs font-semibold flex items-center justify-between gap-2 shadow-xs transition-all z-20"
@@ -315,6 +335,40 @@ export function AppContent() {
           >
             <Loader2 className="w-8 h-8 text-md-primary animate-spin" />
             <p className="text-sm font-medium">{t('common.loading')}</p>
+          </div>
+        )}
+
+        {/* Room Not Found / Fatal Error State */}
+        {!room && !isLoading && !isProvisioning && error && (
+          <div
+            role="alert"
+            className="py-12 px-6 flex flex-col items-center justify-center text-center max-w-md mx-auto bg-md-surface-container-low rounded-3xl border border-md-outline/20 shadow-sm space-y-4"
+          >
+            <div className="w-12 h-12 rounded-full bg-rose-100 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400 flex items-center justify-center">
+              <AlertCircle className="w-6 h-6" />
+            </div>
+            <div className="space-y-1">
+              <h2 className="text-lg font-bold text-md-on-surface">{t('error.room_not_found')}</h2>
+              <p className="text-xs text-md-on-surface-variant line-clamp-2">{error}</p>
+            </div>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Button
+                variant="outlined"
+                size="sm"
+                onClick={() => refetch()}
+                leftIcon={<RefreshCw className="w-4 h-4" />}
+              >
+                {t('sync.retry')}
+              </Button>
+              <Button
+                variant="filled"
+                size="sm"
+                onClick={handleCreateNewRoom}
+                leftIcon={<PlusCircle className="w-4 h-4" />}
+              >
+                {t('room.create_button')}
+              </Button>
+            </div>
           </div>
         )}
 
@@ -509,6 +563,40 @@ export function AppContent() {
             </Button>
           </div>
         </form>
+      </Dialog>
+
+      {/* Confirm Create New Room Dialog */}
+      <Dialog
+        isOpen={isConfirmNewRoomOpen}
+        onClose={() => setIsConfirmNewRoomOpen(false)}
+        title={t('room.create_new')}
+      >
+        <div className="space-y-4 pt-2">
+          <p className="text-sm text-md-on-surface-variant">
+            {t('room.create_confirm')}
+          </p>
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-md-outline/10">
+            <Button
+              type="button"
+              variant="text"
+              size="sm"
+              onClick={() => setIsConfirmNewRoomOpen(false)}
+            >
+              {t('common.cancel')}
+            </Button>
+            <Button
+              type="button"
+              variant="filled"
+              size="sm"
+              onClick={() => {
+                setIsConfirmNewRoomOpen(false);
+                handleCreateNewRoom();
+              }}
+            >
+              {t('room.create_button')}
+            </Button>
+          </div>
+        </div>
       </Dialog>
     </div>
   );

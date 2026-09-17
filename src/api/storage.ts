@@ -1,7 +1,8 @@
 import { RoomState, Language } from '../types';
 
+export const EXTENDSCLASS_BASE_URL = 'https://extendsclass.com/api/json-storage/bin';
+/** @deprecated kept for backward-compat reading of old npoint rooms */
 export const NPOINT_BASE_URL = 'https://api.npoint.io';
-export const JSONBIN_FALLBACK_URL = 'https://api.jsonbin.io/v3/b';
 
 const STORAGE_PREFIX = 'friends_debt_';
 
@@ -42,53 +43,53 @@ export async function createRoom(initialState: RoomState): Promise<string> {
     updatedAt: initialState.updatedAt || Date.now(),
   });
 
-  try {
-    const res = await fetchWithRetry(NPOINT_BASE_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: payload,
-    });
+  const res = await fetchWithRetry(EXTENDSCLASS_BASE_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: payload,
+  });
 
-    if (!res.ok) {
-      throw new Error(`Storage provider returned status ${res.status}: ${res.statusText}`);
-    }
-
-    const data = await res.json();
-    const generatedId =
-      data?.id ||
-      data?.binId ||
-      data?.record?.id ||
-      data?.metadata?.id ||
-      (typeof data === 'string' ? data : null);
-
-    if (generatedId) {
-      return String(generatedId);
-    }
-
-    if (initialState.id) {
-      return initialState.id;
-    }
-
-    throw new Error('No room ID returned by cloud storage provider');
-  } catch (err: any) {
-    console.error('Failed to create room:', err);
-    throw new Error(`Failed to create room: ${err.message || 'Unknown network error'}`);
+  if (!res.ok) {
+    throw new Error(`Storage provider returned status ${res.status}: ${res.statusText}`);
   }
+
+  const data = await res.json();
+  // extendsclass returns { status: 0, uri: "...", id: "abc123" }
+  const generatedId: string | null = data?.id || null;
+
+  if (!generatedId) {
+    throw new Error('No room ID returned by cloud storage provider');
+  }
+
+  // Seed localStorage cache immediately so the room loads instantly
+  const newState: RoomState = { ...initialState, id: generatedId, updatedAt: Date.now() };
+  setCachedRoomState(generatedId, newState);
+
+  return generatedId;
 }
 
 /**
  * Fetches the current room state from the cloud REST JSON provider.
  */
 export async function fetchRoomState(roomId: string): Promise<RoomState> {
-  const url = roomId.startsWith('http') ? roomId : `${NPOINT_BASE_URL}/${roomId}`;
+  // If this is a local offline-first room, retrieve directly from local cache
+  if (roomId.startsWith('local_')) {
+    const cached = getCachedRoomState(roomId);
+    if (cached) {
+      return cached;
+    }
+    throw new Error('Local room not found in device storage');
+  }
+
+  // extendsclass IDs are short alphanumeric strings (e.g. "adbffda", 7 chars)
+  // npoint IDs are longer hex strings — keep backward compat for old rooms
+  const url = roomId.startsWith('http')
+    ? roomId
+    : `${EXTENDSCLASS_BASE_URL}/${roomId}`;
 
   const res = await fetchWithRetry(url, {
     method: 'GET',
-    headers: {
-      'Accept': 'application/json',
-    },
+    headers: { 'Accept': 'application/json' },
   });
 
   if (!res.ok) {
@@ -121,38 +122,28 @@ export async function fetchRoomState(roomId: string): Promise<RoomState> {
  * Returns true if successful, false otherwise.
  */
 export async function saveRoomState(roomId: string, state: RoomState): Promise<boolean> {
-  const url = roomId.startsWith('http') ? roomId : `${NPOINT_BASE_URL}/${roomId}`;
+  // Always update localStorage cache first for instant offline reads
+  setCachedRoomState(roomId, state);
+
+  // local_ rooms only live in localStorage
+  if (roomId.startsWith('local_')) {
+    return true;
+  }
+
+  const url = roomId.startsWith('http') ? roomId : `${EXTENDSCLASS_BASE_URL}/${roomId}`;
   const payload = JSON.stringify({
     ...state,
     updatedAt: state.updatedAt || Date.now(),
   });
 
   try {
+    // extendsclass uses PUT to update an existing bin
     const res = await fetchWithRetry(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
       body: payload,
     });
-
-    if (res.ok) {
-      return true;
-    }
-
-    // Fallback to PUT if POST is not allowed
-    if (res.status === 405) {
-      const putRes = await fetchWithRetry(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: payload,
-      });
-      return putRes.ok;
-    }
-
-    return false;
+    return res.ok;
   } catch (err) {
     console.error('Failed to save room state:', err);
     return false;
