@@ -15,8 +15,8 @@ import { Participant } from '../../types';
 import { useI18n, LanguageSwitcher } from '../../i18n/I18nContext';
 import { Avatar } from '../common/Avatar';
 import { Button } from '../common/Button';
-import { Dialog } from '../common/Dialog';
 import { CurrencyDialog } from '../dialogs/CurrencyDialog';
+import { HelpDialog } from '../dialogs/HelpDialog';
 import { cn } from '../../utils/cn';
 
 export interface HeaderProps {
@@ -432,47 +432,11 @@ export const Header: React.FC<HeaderProps> = ({
         }}
       />
 
-      {/* Internal Help Dialog fallback */}
-      <Dialog
+      {/* Help Dialog */}
+      <HelpDialog
         isOpen={isHelpOpen}
         onClose={() => setIsHelpOpen(false)}
-        title={t('help.title')}
-        maxWidth="md"
-        footer={
-          <Button variant="filled" size="sm" onClick={() => setIsHelpOpen(false)}>
-            {t('common.close')}
-          </Button>
-        }
-      >
-        <div className="space-y-4 py-1 text-sm text-md-on-surface">
-          <section>
-            <h3 className="font-bold text-base text-md-primary mb-1">
-              {t('help.how_it_works_title')}
-            </h3>
-            <p className="whitespace-pre-line text-xs sm:text-sm text-md-on-surface-variant">
-              {t('help.how_it_works_desc')}
-            </p>
-          </section>
-
-          <section>
-            <h3 className="font-bold text-base text-md-primary mb-1">
-              {t('help.debt_simplification_title')}
-            </h3>
-            <p className="whitespace-pre-line text-xs sm:text-sm text-md-on-surface-variant">
-              {t('help.debt_simplification_desc')}
-            </p>
-          </section>
-
-          <section>
-            <h3 className="font-bold text-base text-md-primary mb-1">
-              {t('help.trust_privacy_title')}
-            </h3>
-            <p className="whitespace-pre-line text-xs sm:text-sm text-md-on-surface-variant">
-              {t('help.trust_privacy_desc')}
-            </p>
-          </section>
-        </div>
-      </Dialog>
+      />
     </header>
   );
 };
