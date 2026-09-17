@@ -32,6 +32,7 @@ export interface UseRoomStoreReturn {
   editExpense: (expense: Expense) => Promise<boolean>;
   deleteExpense: (expenseId: string) => Promise<boolean>;
   settleDebt: (settlement: Omit<Settlement, 'id' | 'createdAt'> | Settlement) => Promise<boolean>;
+  deleteSettlement: (settlementId: string) => Promise<boolean>;
   addParticipant: (participant: Omit<Participant, 'id'> | Participant) => Promise<boolean>;
   updateGroupName: (name: string) => Promise<boolean>;
   updateCurrency: (currency: string) => Promise<boolean>;
@@ -288,6 +289,16 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
     [performOptimisticMutation]
   );
 
+  const deleteSettlement = useCallback(
+    async (settlementId: string): Promise<boolean> => {
+      return performOptimisticMutation((current) => ({
+        ...current,
+        settlements: current.settlements.filter((s) => s.id !== settlementId),
+      }));
+    },
+    [performOptimisticMutation]
+  );
+
   return {
     room,
     isLoading,
@@ -297,6 +308,7 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
     editExpense,
     deleteExpense,
     settleDebt,
+    deleteSettlement,
     addParticipant,
     updateGroupName,
     updateCurrency,

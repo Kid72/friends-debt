@@ -204,6 +204,38 @@ describe('useRoomStore Hook', () => {
     expect(result.current.room?.settlements[0].amount).toBe(5);
   });
 
+  it('optimistically deletes a settlement', async () => {
+    const roomWithSettlement: RoomState = {
+      ...mockInitialRoom,
+      settlements: [
+        {
+          id: 's1',
+          fromParticipantId: 'p2',
+          toParticipantId: 'p1',
+          amount: 5,
+          date: '2026-09-17',
+          createdAt: 1000,
+        },
+      ],
+    };
+    vi.spyOn(storage, 'fetchRoomState').mockResolvedValue(roomWithSettlement);
+    vi.spyOn(storage, 'saveRoomState').mockResolvedValue(true);
+
+    const { result } = renderHook(() => useRoomStore('room-123'));
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    let success = false;
+    await act(async () => {
+      success = await result.current.deleteSettlement('s1');
+    });
+
+    expect(success).toBe(true);
+    expect(result.current.room?.settlements.length).toBe(0);
+  });
+
   it('adds a participant with assigned color', async () => {
     vi.spyOn(storage, 'fetchRoomState').mockResolvedValue(mockInitialRoom);
     vi.spyOn(storage, 'saveRoomState').mockResolvedValue(true);

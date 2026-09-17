@@ -65,6 +65,9 @@ export const azTranslations = {
   'expense.no_participants_selected': 'Ən azı bir iştirakçı seçilməlidir',
   'expense.empty_title_error': 'Xərcin adını daxil edin',
   'expense.invalid_amount_error': 'Düzgün məbləğ daxil edin',
+  'expense.per_person': 'Hər kəsə {amount}',
+  'expense.remaining_amount': 'Qalıq: {amount}',
+  'expense.exact_split_match': 'Cəm dəqiq uyğun gəlir',
 
   // Settle Debt Dialog
   'settle.title': 'Borcu bağla',
@@ -155,6 +158,15 @@ export const azTranslations = {
   'history.expenses_filter': 'Xərclər',
   'history.settlements_filter': 'Borc bağlamaları',
   'history.settled_badge': 'Borc ödənildi',
+  'history.search_placeholder': 'Axtarış (təsvir və ya iştirakçı)...',
+  'history.today': 'Bugün',
+  'history.yesterday': 'Dünən',
+  'history.settlement_paid': '{debtor} ödədi {receiver}-ə: {amount}',
+
+  // Delete Confirmation Dialog
+  'delete.confirm_title': 'Silinməni təsdiqləyin',
+  'delete.warning_recalc': 'Bu əməliyyatı sildikdə bütün borclar və balanslar avtomatik yenidən hesablanacaq.',
+  'delete.settlement_confirm': '"{debtor}" tərəfindən "{receiver}" şəxsinə olan {amount} ödənişi silmək istədiyinizə əminsiniz?',
 
   // Common UI Actions
   'common.save': 'Yadda saxla',
@@ -237,6 +249,9 @@ export const ruTranslations: Record<TranslationKey, string> = {
   'expense.no_participants_selected': 'Выберите хотя бы одного участника',
   'expense.empty_title_error': 'Введите название расхода',
   'expense.invalid_amount_error': 'Введите корректную сумму',
+  'expense.per_person': 'На каждого {amount}',
+  'expense.remaining_amount': 'Остаток: {amount}',
+  'expense.exact_split_match': 'Сумма сходится',
 
   // Settle Debt Dialog
   'settle.title': 'Погасить долг',
@@ -327,6 +342,15 @@ export const ruTranslations: Record<TranslationKey, string> = {
   'history.expenses_filter': 'Расходы',
   'history.settlements_filter': 'Выплаты',
   'history.settled_badge': 'Долг оплачен',
+  'history.search_placeholder': 'Поиск (описание или участник)...',
+  'history.today': 'Сегодня',
+  'history.yesterday': 'Вчера',
+  'history.settlement_paid': '{debtor} перевел(а) {receiver}: {amount}',
+
+  // Delete Confirmation Dialog
+  'delete.confirm_title': 'Подтвердите удаление',
+  'delete.warning_recalc': 'При удалении этой записи все долги и балансы будут автоматически пересчитаны.',
+  'delete.settlement_confirm': 'Вы уверены, что хотите удалить выплату {amount} от «{debtor}» в пользу «{receiver}»?',
 
   // Common UI Actions
   'common.save': 'Сохранить',
@@ -407,6 +431,9 @@ export const enTranslations: Record<TranslationKey, string> = {
   'expense.no_participants_selected': 'Please select at least one participant',
   'expense.empty_title_error': 'Please enter expense title',
   'expense.invalid_amount_error': 'Please enter a valid amount',
+  'expense.per_person': 'Per person {amount}',
+  'expense.remaining_amount': 'Remaining: {amount}',
+  'expense.exact_split_match': 'Exact sum match',
 
   // Settle Debt Dialog
   'settle.title': 'Settle debt',
@@ -497,6 +524,15 @@ export const enTranslations: Record<TranslationKey, string> = {
   'history.expenses_filter': 'Expenses',
   'history.settlements_filter': 'Settlements',
   'history.settled_badge': 'Debt settled',
+  'history.search_placeholder': 'Search (description or participant)...',
+  'history.today': 'Today',
+  'history.yesterday': 'Yesterday',
+  'history.settlement_paid': '{debtor} paid {receiver}: {amount}',
+
+  // Delete Confirmation Dialog
+  'delete.confirm_title': 'Confirm deletion',
+  'delete.warning_recalc': 'Deleting this entry will automatically recalculate all group debts and balances.',
+  'delete.settlement_confirm': 'Are you sure you want to delete payment of {amount} from "{debtor}" to "{receiver}"?',
 
   // Common UI Actions
   'common.save': 'Save',
