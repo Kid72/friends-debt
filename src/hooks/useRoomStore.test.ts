@@ -31,6 +31,7 @@ describe('useRoomStore Hook', () => {
 
   beforeEach(() => {
     vi.restoreAllMocks();
+    localStorage.clear();
   });
 
   afterEach(() => {
@@ -299,5 +300,81 @@ describe('useRoomStore Hook', () => {
     });
 
     expect(result.current.room?.groupName).toBe('Uzaqdan Yenilənmiş Ad');
+  });
+
+  describe('Offline Room State Caching', () => {
+    it('initializes room state immediately from cached state in localStorage', async () => {
+      storage.setCachedRoomState('room-cached', mockInitialRoom);
+
+      // fetchRoomState will take some time
+      let resolveFetch: (value: RoomState) => void = () => {};
+      vi.spyOn(storage, 'fetchRoomState').mockImplementation(() => {
+        return new Promise((resolve) => {
+          resolveFetch = resolve;
+        });
+      });
+
+      const { result } = renderHook(() => useRoomStore('room-cached'));
+
+      // Initially, room state is already populated from cache even while loading
+      expect(result.current.room).toEqual(mockInitialRoom);
+      expect(result.current.isLoading).toBe(true);
+
+      // Now resolve fetch
+      await act(async () => {
+        resolveFetch({
+          ...mockInitialRoom,
+          groupName: 'Updated After Fetch',
+        });
+      });
+
+      expect(result.current.room?.groupName).toBe('Updated After Fetch');
+      expect(storage.getCachedRoomState('room-cached')?.groupName).toBe('Updated After Fetch');
+    });
+
+    it('keeps displaying cached room state with gentle offline status when fetch fails', async () => {
+      storage.setCachedRoomState('room-offline', mockInitialRoom);
+
+      vi.spyOn(storage, 'fetchRoomState').mockRejectedValue(new Error('Failed to fetch (offline)'));
+
+      const { result } = renderHook(() => useRoomStore('room-offline'));
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      // Does not show fatal error, retains cached room state and sets isOffline
+      expect(result.current.room).toEqual(mockInitialRoom);
+      expect(result.current.error).toBeNull();
+      expect(result.current.isOffline).toBe(true);
+    });
+
+    it('updates cache upon mutation and rollbacks cache on save failure', async () => {
+      storage.setCachedRoomState('room-123', mockInitialRoom);
+      vi.spyOn(storage, 'fetchRoomState').mockResolvedValue(mockInitialRoom);
+      vi.spyOn(storage, 'saveRoomState').mockResolvedValue(false);
+
+      const { result } = renderHook(() => useRoomStore('room-123'));
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      await act(async () => {
+        await result.current.addExpense({
+          title: 'Rollback Expense',
+          amount: 25,
+          payerId: 'p1',
+          date: '2026-09-17',
+          splitMode: 'equal',
+          involvedParticipantIds: ['p1', 'p2'],
+        });
+      });
+
+      // After rollback, cache should match original state (1 expense)
+      const cached = storage.getCachedRoomState('room-123');
+      expect(cached?.expenses.length).toBe(1);
+      expect(cached?.expenses[0].id).toBe('e1');
+    });
   });
 });

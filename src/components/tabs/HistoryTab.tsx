@@ -311,7 +311,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
           </h3>
           <p className="text-xs sm:text-sm text-md-on-surface-variant max-w-sm mx-auto">
             {searchQuery || filterType !== 'all' || selectedParticipantId !== 'all'
-              ? 'Axtarış və ya filter meyarlarına uyğun heç nə tapılmadı.'
+              ? t('history.no_results')
               : t('app.short_desc')}
           </p>
         </Card>
@@ -404,7 +404,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
                                   <span className="font-medium text-[11px] truncate">
                                     {involvedList.length <= 3
                                       ? involvedList.map((p) => p.name).join(', ')
-                                      : `${involvedList.length} nəfər`}
+                                      : t('history.people_count', { count: involvedList.length })}
                                   </span>
                                 </div>
                               )}

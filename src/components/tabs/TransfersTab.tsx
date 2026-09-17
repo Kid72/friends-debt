@@ -142,7 +142,7 @@ export const TransfersTab: React.FC<TransfersTabProps> = ({
           </h2>
           <p className="text-xs text-md-on-surface-variant mt-0.5">
             {transfers.length > 0
-              ? 'Minimum tranzaksiya ilə bütün borcların bağlanması'
+              ? t('transfers.min_transfers_desc')
               : t('balance.settled')}
           </p>
         </div>
@@ -182,7 +182,7 @@ export const TransfersTab: React.FC<TransfersTabProps> = ({
           <p className="text-xs sm:text-sm text-md-on-surface-variant max-w-md mx-auto leading-relaxed mb-6">
             {expenses.length === 0
               ? t('balance.no_expenses')
-              : 'Qrupdakı bütün xərclər tam hesablanıb və qarşılıqlı ödənilib. Yeni xərc əlavə edildikdə balans avtomatik yenilənəcək.'}
+              : t('transfers.all_cleared_desc')}
           </p>
 
           <div className="flex items-center justify-center gap-3 flex-wrap">

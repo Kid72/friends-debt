@@ -69,6 +69,8 @@ export const azTranslations = {
   'expense.per_person': 'Hər kəsə {amount}',
   'expense.remaining_amount': 'Qalıq: {amount}',
   'expense.exact_split_match': 'Cəm dəqiq uyğun gəlir',
+  'expense.over_amount': 'Artıq: ',
+  'expense.distribute_evenly': 'Bərabər payla',
 
   // Settle Debt Dialog
   'settle.title': 'Borcu bağla',
@@ -83,6 +85,8 @@ export const azTranslations = {
   'settle.direct_transfer': 'Birbaşa köçürmə',
   'settle.mark_paid': 'Ödənildi kimi qeyd et',
   'settle.share_summary': 'Ümumi hesabatı paylaş',
+  'transfers.min_transfers_desc': 'Minimum tranzaksiya ilə bütün borcların bağlanması',
+  'transfers.all_cleared_desc': 'Qrupdakı bütün xərclər tam hesablanıb və qarşılıqlı ödənilib. Yeni xərc əlavə edildikdə balans avtomatik yenilənəcək.',
 
   // WhatsApp Deep Linking Templates
   'whatsapp.settle_title': '✅ Borc bağlandı!',
@@ -130,6 +134,14 @@ export const azTranslations = {
   'help.step_3_desc': 'Alqoritm minimum sayda köçürmə təklif edir. 1 toxunuşla borcu bağlayın və WhatsApp-da bildirin.',
   'help.debt_simplification_title': 'Borcların sadələşdirilməsi alqoritmi',
   'help.debt_simplification_desc': 'Əgər Əli Vəliyə 10 ₼, Vəli isə Məmmədə 10 ₼ borcludursa, sistem Vəlini aradan çıxarır və Əlinin birbaşa Məmmədə 10 ₼ ödəməsini təklif edir. Bu, bank köçürmələrinin və komissiyaların sayını kəskin azaldır.',
+  'help.visual_example_title': 'Vizual Nümunə',
+  'help.before_optimization': '❌ Optimallaşdırmadan əvvəl ({count} əməliyyat):',
+  'help.after_optimization': '✅ Borcların sadələşdirilməsi ilə (Cəmi {count} birbaşa köçürmə):',
+  'help.direct_transfer_note': 'birbaşa',
+  'help.excluded_person_note': '({name} aradan çıxdı)',
+  'help.sample_person_1': 'Əli',
+  'help.sample_person_2': 'Vəli',
+  'help.sample_person_3': 'Məmməd',
   'help.pwa_install_title': 'Tətbiqi quraşdırın (PWA)',
   'help.pwa_ios_title': 'Apple iOS (Safari)',
   'help.pwa_ios_desc': "iOS (Safari): Ekranın aşağısındakı 'Paylaş' (Share) düyməsinə vurun və 'Əsas ekrana əlavə et' (Add to Home Screen) seçin.",
@@ -155,6 +167,8 @@ export const azTranslations = {
   'participant.add_title': 'Yeni dost əlavə et',
   'participant.name_label': 'Adı',
   'participant.name_placeholder': 'Məs., Elvin',
+  'participant.last_name_label': 'Soyad (İxtiyari)',
+  'participant.last_name_placeholder': 'Məs., Əliyev',
   'participant.color_label': 'Rəng',
   'participant.add_button': 'Əlavə et',
   'participant.list_title': 'İştirakçılar',
@@ -172,6 +186,8 @@ export const azTranslations = {
   // History Tab
   'history.title': 'Xərclər və ödənişlər tarixçəsi',
   'history.empty': 'Heç bir xərc və ya ödəniş tapılmadı',
+  'history.no_results': 'Axtarış və ya filter meyarlarına uyğun heç nə tapılmadı.',
+  'history.people_count': '{count} nəfər',
   'history.all_filter': 'Hamısı',
   'history.expenses_filter': 'Xərclər',
   'history.settlements_filter': 'Borc bağlamaları',
@@ -271,6 +287,8 @@ export const ruTranslations: Record<TranslationKey, string> = {
   'expense.per_person': 'На каждого {amount}',
   'expense.remaining_amount': 'Остаток: {amount}',
   'expense.exact_split_match': 'Сумма сходится',
+  'expense.over_amount': 'Излишек: ',
+  'expense.distribute_evenly': 'Разделить поровну',
 
   // Settle Debt Dialog
   'settle.title': 'Погасить долг',
@@ -285,6 +303,8 @@ export const ruTranslations: Record<TranslationKey, string> = {
   'settle.direct_transfer': 'Прямой перевод',
   'settle.mark_paid': 'Отметить как оплачено',
   'settle.share_summary': 'Поделиться итогами',
+  'transfers.min_transfers_desc': 'Закрытие всех долгов с минимальным числом переводов',
+  'transfers.all_cleared_desc': 'Все расходы группы полностью рассчитаны и взаимно закрыты. При добавлении нового расхода баланс обновится автоматически.',
 
   // WhatsApp Deep Linking Templates
   'whatsapp.settle_title': '✅ Долг закрыт!',
@@ -332,6 +352,14 @@ export const ruTranslations: Record<TranslationKey, string> = {
   'help.step_3_desc': 'Алгоритм предлагает минимум переводов. В один клик закройте долг и подтвердите в WhatsApp.',
   'help.debt_simplification_title': 'Упрощение расчетов (Min Cash Flow)',
   'help.debt_simplification_desc': 'Если Али должен Вели 10 ₼, а Вели должен Мамеду 10 ₼, алгоритм исключает Вели: Али переводит 10 ₼ напрямую Мамеду. Это избавляет от лишних транзакций.',
+  'help.visual_example_title': 'Наглядный пример',
+  'help.before_optimization': '❌ До оптимизации ({count} перевода):',
+  'help.after_optimization': '✅ После упрощения долгов (Всего {count} прямой перевод):',
+  'help.direct_transfer_note': 'напрямую',
+  'help.excluded_person_note': '({name} исключен(а))',
+  'help.sample_person_1': 'Али',
+  'help.sample_person_2': 'Вели',
+  'help.sample_person_3': 'Мамед',
   'help.pwa_install_title': 'Установка приложения (PWA)',
   'help.pwa_ios_title': 'Apple iOS (Safari)',
   'help.pwa_ios_desc': 'iOS (Safari): Нажмите кнопку «Поделиться» (Share) внизу экрана и выберите «На экран Домой» (Add to Home Screen).',
@@ -357,6 +385,8 @@ export const ruTranslations: Record<TranslationKey, string> = {
   'participant.add_title': 'Добавить друга',
   'participant.name_label': 'Имя',
   'participant.name_placeholder': 'Напр., Эльвин',
+  'participant.last_name_label': 'Фамилия (Необязательно)',
+  'participant.last_name_placeholder': 'Напр., Алиев',
   'participant.color_label': 'Цвет',
   'participant.add_button': 'Добавить',
   'participant.list_title': 'Участники',
@@ -374,6 +404,8 @@ export const ruTranslations: Record<TranslationKey, string> = {
   // History Tab
   'history.title': 'История расходов и выплат',
   'history.empty': 'История пуста',
+  'history.no_results': 'По заданным фильтрам ничего не найдено.',
+  'history.people_count': '{count} чел.',
   'history.all_filter': 'Все',
   'history.expenses_filter': 'Расходы',
   'history.settlements_filter': 'Выплаты',
@@ -471,6 +503,8 @@ export const enTranslations: Record<TranslationKey, string> = {
   'expense.per_person': 'Per person {amount}',
   'expense.remaining_amount': 'Remaining: {amount}',
   'expense.exact_split_match': 'Exact sum match',
+  'expense.over_amount': 'Surplus: ',
+  'expense.distribute_evenly': 'Split evenly',
 
   // Settle Debt Dialog
   'settle.title': 'Settle debt',
@@ -485,6 +519,8 @@ export const enTranslations: Record<TranslationKey, string> = {
   'settle.direct_transfer': 'Direct transfer',
   'settle.mark_paid': 'Mark as paid',
   'settle.share_summary': 'Share gathering summary',
+  'transfers.min_transfers_desc': 'Settling all debts with minimal transactions',
+  'transfers.all_cleared_desc': 'All group expenses have been fully calculated and settled. When a new expense is added, balance will update automatically.',
 
   // WhatsApp Deep Linking Templates
   'whatsapp.settle_title': '✅ Debt settled!',
@@ -532,6 +568,14 @@ export const enTranslations: Record<TranslationKey, string> = {
   'help.step_3_desc': 'The algorithm suggests minimum transfers. Settle up with 1 click and confirm via WhatsApp.',
   'help.debt_simplification_title': 'Debt simplification algorithm',
   'help.debt_simplification_desc': 'If Alice owes Bob $10, and Bob owes Charlie $10, the algorithm eliminates Bob: Alice pays $10 directly to Charlie. This minimizes total bank transfers.',
+  'help.visual_example_title': 'Visual Example',
+  'help.before_optimization': '❌ Before optimization ({count} transactions):',
+  'help.after_optimization': '✅ After debt simplification (Only {count} direct transfer):',
+  'help.direct_transfer_note': 'direct',
+  'help.excluded_person_note': '({name} bypassed)',
+  'help.sample_person_1': 'Alice',
+  'help.sample_person_2': 'Bob',
+  'help.sample_person_3': 'Charlie',
   'help.pwa_install_title': 'Install App (PWA)',
   'help.pwa_ios_title': 'Apple iOS (Safari)',
   'help.pwa_ios_desc': "iOS (Safari): Tap the Share button at the bottom and select 'Add to Home Screen'.",
@@ -557,6 +601,8 @@ export const enTranslations: Record<TranslationKey, string> = {
   'participant.add_title': 'Add new friend',
   'participant.name_label': 'Name',
   'participant.name_placeholder': 'e.g., Elvin',
+  'participant.last_name_label': 'Last name (Optional)',
+  'participant.last_name_placeholder': 'E.g., Smith',
   'participant.color_label': 'Color',
   'participant.add_button': 'Add',
   'participant.list_title': 'Participants',
@@ -574,6 +620,8 @@ export const enTranslations: Record<TranslationKey, string> = {
   // History Tab
   'history.title': 'Expenses & settlements history',
   'history.empty': 'No expenses or settlements found',
+  'history.no_results': 'No matching items found.',
+  'history.people_count': '{count} people',
   'history.all_filter': 'All',
   'history.expenses_filter': 'Expenses',
   'history.settlements_filter': 'Settlements',

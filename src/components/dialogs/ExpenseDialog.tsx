@@ -545,7 +545,7 @@ export const ExpenseDialog: React.FC<ExpenseDialogProps> = ({
                     ? t('expense.remaining_amount', {
                         amount: formatMoney(customSplitDiff, currency),
                       })
-                    : `Artıq: ${formatMoney(Math.abs(customSplitDiff), currency)}`}
+                    : `${t('expense.over_amount')}${formatMoney(Math.abs(customSplitDiff), currency)}`}
                 </span>
               </div>
 
@@ -563,7 +563,7 @@ export const ExpenseDialog: React.FC<ExpenseDialogProps> = ({
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-md-primary hover:underline cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <Divide className="w-3.5 h-3.5" />
-                <span>Bərabər payla</span>
+                <span>{t('expense.distribute_evenly')}</span>
               </button>
             </div>
 

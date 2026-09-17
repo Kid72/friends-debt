@@ -110,6 +110,7 @@ export function AppContent() {
     room,
     isLoading,
     isSyncing,
+    isOffline: isStoreOffline,
     error,
     addExpense,
     editExpense,
@@ -273,7 +274,7 @@ export function AppContent() {
       />
 
       {/* 2. Offline / Network Sync Indicator Banner */}
-      {isOffline && (
+      {(isOffline || isStoreOffline) && (
         <div
           role="status"
           aria-live="polite"
@@ -284,7 +285,7 @@ export function AppContent() {
         </div>
       )}
 
-      {error && !isOffline && (
+      {error && !isOffline && !isStoreOffline && (
         <div
           role="alert"
           className="bg-rose-600 text-white px-4 py-2 text-xs font-semibold flex items-center justify-between gap-2 shadow-xs transition-all z-20"

@@ -257,10 +257,12 @@ describe('Common Atomic Components', () => {
       expect(firstClasses).toBe(secondClasses);
     });
 
-    it('supports custom color override', () => {
+    it('supports custom color override with high-contrast text', () => {
       const { container } = render(<Avatar name="Murad" color="#123456" />);
       const el = container.firstChild as HTMLElement;
       expect(el.style.backgroundColor).toBe('rgb(18, 52, 86)');
+      expect(el.className).toContain('text-white');
+      expect(el.className).toContain('font-medium');
     });
 
     it('renders image when src provided', () => {

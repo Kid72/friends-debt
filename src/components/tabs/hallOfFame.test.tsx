@@ -195,7 +195,7 @@ describe('Help & Info Modal ("HelpDialog")', () => {
 
     // 2. "Borcların sadələşdirilməsi alqoritmi"
     expect(screen.getByText('Borcların sadələşdirilməsi alqoritmi')).toBeInTheDocument();
-    expect(screen.getByText(/Borcların схлопывание-si ilə/i)).toBeInTheDocument();
+    expect(screen.getByText(/Borcların sadələşdirilməsi ilə/i)).toBeInTheDocument();
 
     // 3. "Tətbiqi quraşdırın (PWA)"
     expect(screen.getByText('Tətbiqi quraşdırın (PWA)')).toBeInTheDocument();

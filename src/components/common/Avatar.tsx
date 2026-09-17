@@ -93,7 +93,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
           'relative inline-flex items-center justify-center rounded-full overflow-hidden select-none shrink-0 shadow-xs transition-transform duration-200',
           sizeClasses,
           !isCustomColorHex && (customBgClass || palette.bg),
-          palette.text,
+          isCustomColorHex ? 'text-white font-medium' : palette.text,
           className
         )}
         {...rest}

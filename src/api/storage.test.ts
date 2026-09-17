@@ -6,7 +6,9 @@ import {
   getActiveUserId,
   setActiveUserId,
   getStoredLanguage,
-  setStoredLanguage
+  setStoredLanguage,
+  getCachedRoomState,
+  setCachedRoomState,
 } from './storage';
 import { RoomState } from '../types';
 
@@ -221,6 +223,29 @@ describe('Storage API', () => {
 
       setStoredLanguage('ru');
       expect(getStoredLanguage()).toBe('ru');
+    });
+
+    it('saves and retrieves cached room state in localStorage', () => {
+      const mockRoom: RoomState = {
+        id: 'cached-room-1',
+        groupName: 'Offline Group',
+        currency: '₼',
+        participants: [{ id: 'p1', name: 'Elvin', avatarColor: '#006A60' }],
+        expenses: [],
+        settlements: [],
+        updatedAt: 12345,
+      };
+
+      expect(getCachedRoomState('cached-room-1')).toBeNull();
+
+      setCachedRoomState('cached-room-1', mockRoom);
+      const cached = getCachedRoomState('cached-room-1');
+      expect(cached).toEqual(mockRoom);
+    });
+
+    it('returns null if cached room state is invalid JSON', () => {
+      localStorage.setItem('friends_debt_room_corrupt', '{invalid json');
+      expect(getCachedRoomState('corrupt')).toBeNull();
     });
   });
 });

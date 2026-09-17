@@ -160,6 +160,32 @@ export async function saveRoomState(roomId: string, state: RoomState): Promise<b
 }
 
 /**
+ * Cached room state in localStorage for offline PWA instant loading.
+ */
+export function getCachedRoomState(roomId: string): RoomState | null {
+  try {
+    const raw = localStorage.getItem(`${STORAGE_PREFIX}room_${roomId}`);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') return null;
+    return parsed as RoomState;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Saves cached room state to localStorage for offline PWA instant loading.
+ */
+export function setCachedRoomState(roomId: string, state: RoomState): void {
+  try {
+    localStorage.setItem(`${STORAGE_PREFIX}room_${roomId}`, JSON.stringify(state));
+  } catch (err) {
+    console.warn('Failed to cache room state in localStorage:', err);
+  }
+}
+
+/**
  * Local device preference: Get active user ID for this room from localStorage.
  */
 export function getActiveUserId(roomId: string): string | null {

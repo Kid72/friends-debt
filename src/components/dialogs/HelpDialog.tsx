@@ -173,42 +173,42 @@ export const HelpDialog: React.FC<HelpDialogProps> = ({
               <div className="bg-md-surface-container-low rounded-2xl p-3.5 sm:p-4 border border-md-outline/10 space-y-3">
                 <div className="text-xs font-bold uppercase tracking-wider text-md-on-surface-variant flex items-center gap-1.5">
                   <Layers className="w-3.5 h-3.5 text-md-primary" />
-                  <span>Vizual Nümunə / Visual Example</span>
+                  <span>{t('help.visual_example_title')}</span>
                 </div>
 
                 {/* Before: Triangular / chained debt */}
                 <div className="flex flex-col gap-1">
                   <div className="text-[11px] font-semibold text-rose-600 dark:text-rose-400">
-                    ❌ Optimallaşdırmadan əvvəl (2 əməliyyat):
+                    {t('help.before_optimization', { count: 2 })}
                   </div>
                   <div className="flex items-center justify-center gap-2 py-2 px-3 bg-md-surface-container-high/40 rounded-xl text-xs flex-wrap font-mono">
-                    <span className="font-semibold text-md-on-surface">Əli</span>
+                    <span className="font-semibold text-md-on-surface">{t('help.sample_person_1')}</span>
                     <ArrowRight className="w-3.5 h-3.5 text-rose-500 shrink-0" />
                     <span className="font-bold text-rose-600 dark:text-rose-400">10 ₼</span>
                     <ArrowRight className="w-3.5 h-3.5 text-rose-500 shrink-0" />
-                    <span className="font-semibold text-md-on-surface">Vəli</span>
+                    <span className="font-semibold text-md-on-surface">{t('help.sample_person_2')}</span>
                     <ArrowRight className="w-3.5 h-3.5 text-rose-500 shrink-0" />
                     <span className="font-bold text-rose-600 dark:text-rose-400">10 ₼</span>
                     <ArrowRight className="w-3.5 h-3.5 text-rose-500 shrink-0" />
-                    <span className="font-semibold text-md-on-surface">Məmməd</span>
+                    <span className="font-semibold text-md-on-surface">{t('help.sample_person_3')}</span>
                   </div>
                 </div>
 
                 {/* After: Collapsed / Min Cash Flow transfer */}
                 <div className="flex flex-col gap-1">
                   <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-                    ✅ Borcların схлопывание-si ilə (Cəmi 1 birbaşa köçürmə):
+                    {t('help.after_optimization', { count: 1 })}
                   </div>
                   <div className="flex items-center justify-center gap-2 py-2 px-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-xs flex-wrap font-mono text-emerald-900 dark:text-emerald-200">
-                    <span className="font-bold text-md-on-surface">Əli</span>
+                    <span className="font-bold text-md-on-surface">{t('help.sample_person_1')}</span>
                     <ArrowRight className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                      10 ₼ (birbaşa)
+                      10 ₼ ({t('help.direct_transfer_note')})
                     </span>
                     <ArrowRight className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                    <span className="font-bold text-md-on-surface">Məmməd</span>
+                    <span className="font-bold text-md-on-surface">{t('help.sample_person_3')}</span>
                     <span className="text-[10px] text-emerald-700 dark:text-emerald-300 ml-1 font-sans">
-                      (Vəli aradan çıxdı)
+                      {t('help.excluded_person_note', { name: t('help.sample_person_2') })}
                     </span>
                   </div>
                 </div>

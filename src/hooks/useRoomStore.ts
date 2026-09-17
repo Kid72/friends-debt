@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { RoomState, Expense, Settlement, Participant } from '../types';
-import { fetchRoomState, saveRoomState } from '../api/storage';
+import {
+  fetchRoomState,
+  saveRoomState,
+  getCachedRoomState,
+  setCachedRoomState,
+} from '../api/storage';
 
 export const DEFAULT_AVATAR_COLORS = [
   '#006A60', // Deep Teal Primary
@@ -27,6 +32,7 @@ export interface UseRoomStoreReturn {
   room: RoomState | null;
   isLoading: boolean;
   isSyncing: boolean;
+  isOffline?: boolean;
   error: string | null;
   addExpense: (expense: Omit<Expense, 'id' | 'createdAt'> | Expense) => Promise<boolean>;
   editExpense: (expense: Expense) => Promise<boolean>;
@@ -40,9 +46,12 @@ export interface UseRoomStoreReturn {
 }
 
 export function useRoomStore(roomId: string | null | undefined): UseRoomStoreReturn {
-  const [room, setRoom] = useState<RoomState | null>(null);
+  const [room, setRoom] = useState<RoomState | null>(() => {
+    return roomId ? getCachedRoomState(roomId) : null;
+  });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
+  const [isOffline, setIsOffline] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const roomRef = useRef<RoomState | null>(room);
@@ -57,8 +66,15 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
       setRoom(null);
       setIsLoading(false);
       setIsSyncing(false);
+      setIsOffline(false);
       setError(null);
       return;
+    }
+
+    const cached = getCachedRoomState(roomId);
+    if (cached) {
+      setRoom(cached);
+      roomRef.current = cached;
     }
 
     let isMounted = true;
@@ -70,12 +86,21 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
         if (isMounted && activeRoomIdRef.current === roomId) {
           setRoom(data);
           roomRef.current = data;
+          setCachedRoomState(roomId, data);
           setError(null);
+          setIsOffline(false);
         }
       })
       .catch((err) => {
         if (isMounted && activeRoomIdRef.current === roomId) {
-          setError(err?.message || 'Otaq məlumatları yüklənə bilmədi');
+          const currentCached = roomRef.current || getCachedRoomState(roomId);
+          if (currentCached) {
+            // Keep displaying cached room state with offline status, do not show fatal error
+            setError(null);
+            setIsOffline(true);
+          } else {
+            setError(err?.message || 'Otaq məlumatları yüklənə bilmədi');
+          }
         }
       })
       .finally(() => {
@@ -103,7 +128,9 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
           if (remote.updatedAt > currentUpdatedAt || !roomRef.current) {
             setRoom(remote);
             roomRef.current = remote;
+            setCachedRoomState(roomId, remote);
           }
+          setIsOffline(false);
         }
       } catch {
         // Silent polling failure to avoid interrupting user interactions
@@ -139,11 +166,19 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
       if (activeRoomIdRef.current === roomId) {
         setRoom(remote);
         roomRef.current = remote;
+        setCachedRoomState(roomId, remote);
         setError(null);
+        setIsOffline(false);
       }
     } catch (err: any) {
       if (activeRoomIdRef.current === roomId) {
-        setError(err?.message || 'Yenilənmə zamanı xəta baş verdi');
+        const currentCached = roomRef.current || getCachedRoomState(roomId);
+        if (currentCached) {
+          setError(null);
+          setIsOffline(true);
+        } else {
+          setError(err?.message || 'Yenilənmə zamanı xəta baş verdi');
+        }
       }
     } finally {
       if (activeRoomIdRef.current === roomId) {
@@ -164,6 +199,7 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
       // Optimistic update
       roomRef.current = updatedState;
       setRoom(updatedState);
+      setCachedRoomState(roomId, updatedState);
       setIsSyncing(true);
       setError(null);
 
@@ -178,6 +214,7 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
         // Rollback
         roomRef.current = current;
         setRoom(current);
+        setCachedRoomState(roomId, current);
         setError(err?.message || 'Xəta baş verdi, dəyişiklik geri qaytarıldı');
         setIsSyncing(false);
         return false;
@@ -303,6 +340,7 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
     room,
     isLoading,
     isSyncing,
+    isOffline,
     error,
     addExpense,
     editExpense,

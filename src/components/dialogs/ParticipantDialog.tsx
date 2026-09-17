@@ -163,12 +163,12 @@ export const ParticipantDialog: React.FC<ParticipantDialogProps> = ({
               htmlFor="participant-last-name"
               className="block text-xs font-semibold text-md-on-surface-variant mb-1.5 uppercase tracking-wider"
             >
-              Soyad (İxtiyari)
+              {t('participant.last_name_label')}
             </label>
             <input
               id="participant-last-name"
               type="text"
-              placeholder="Məs., Əliyev"
+              placeholder={t('participant.last_name_placeholder')}
               value={lastName}
               onChange={(e) => {
                 setLastName(e.target.value);

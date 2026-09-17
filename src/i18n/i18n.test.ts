@@ -118,6 +118,41 @@ describe('i18n Translations', () => {
     expect(getTranslation('ru', 'sync.syncing')).toBe('Синхронизация...');
     expect(getTranslation('en', 'sync.offline')).toBe('Offline mode');
   });
+
+  it('contains complete translations for new review-flagged keys across AZ, RU, EN', () => {
+    // Expense
+    expect(getTranslation('az', 'expense.over_amount')).toBe('Artıq: ');
+    expect(getTranslation('ru', 'expense.over_amount')).toBe('Излишек: ');
+    expect(getTranslation('en', 'expense.over_amount')).toBe('Surplus: ');
+
+    expect(getTranslation('az', 'expense.distribute_evenly')).toBe('Bərabər payla');
+    expect(getTranslation('ru', 'expense.distribute_evenly')).toBe('Разделить поровну');
+    expect(getTranslation('en', 'expense.distribute_evenly')).toBe('Split evenly');
+
+    // History
+    expect(getTranslation('az', 'history.people_count', { count: 5 })).toBe('5 nəfər');
+    expect(getTranslation('ru', 'history.people_count', { count: 5 })).toBe('5 чел.');
+    expect(getTranslation('en', 'history.people_count', { count: 5 })).toBe('5 people');
+
+    expect(getTranslation('az', 'history.no_results')).toContain('Axtarış');
+    expect(getTranslation('ru', 'history.no_results')).toContain('фильтрам');
+    expect(getTranslation('en', 'history.no_results')).toContain('No matching');
+
+    // Participant
+    expect(getTranslation('az', 'participant.last_name_label')).toBe('Soyad (İxtiyari)');
+    expect(getTranslation('ru', 'participant.last_name_label')).toBe('Фамилия (Необязательно)');
+    expect(getTranslation('en', 'participant.last_name_label')).toBe('Last name (Optional)');
+
+    // Transfers
+    expect(getTranslation('az', 'transfers.min_transfers_desc')).toContain('Minimum tranzaksiya');
+    expect(getTranslation('ru', 'transfers.min_transfers_desc')).toContain('минимальным числом');
+    expect(getTranslation('en', 'transfers.min_transfers_desc')).toContain('minimal transactions');
+
+    // Help visual example
+    expect(getTranslation('az', 'help.visual_example_title')).toBe('Vizual Nümunə');
+    expect(getTranslation('ru', 'help.visual_example_title')).toBe('Наглядный пример');
+    expect(getTranslation('en', 'help.visual_example_title')).toBe('Visual Example');
+  });
 });
 
 describe('I18nContext and useI18n hook', () => {
