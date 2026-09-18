@@ -121,10 +121,12 @@ export const TransfersTab: React.FC<TransfersTabProps> = ({
     toParticipantId: string;
     amount: number;
     date: string;
-  }) => {
+  }): Promise<boolean> => {
     if (onSettleDebt) {
-      await onSettleDebt(settlement);
+      const res = await onSettleDebt(settlement);
+      return res !== false;
     }
+    return true;
   };
 
   return (

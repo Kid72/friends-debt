@@ -11,6 +11,7 @@ import {
   Coins,
   Users,
   RefreshCw,
+  LogIn,
 } from 'lucide-react';
 import { Participant } from '../../types';
 import { useI18n, LanguageSwitcher } from '../../i18n/I18nContext';
@@ -32,6 +33,7 @@ export interface HeaderProps {
   onOpenHelp?: () => void;
   onEditGroupName?: () => void;
   onCreateNewRoom?: () => void;
+  onJoinRoom?: () => void;
   isSyncing?: boolean;
   className?: string;
 }
@@ -48,6 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenHelp,
   onEditGroupName,
   onCreateNewRoom,
+  onJoinRoom,
   isSyncing = false,
   className,
 }) => {
@@ -421,6 +424,25 @@ export const Header: React.FC<HeaderProps> = ({
                     >
                       <FolderPlus className="w-4 h-4" />
                       <span>{t('room.create_new')}</span>
+                    </button>
+                  </>
+                )}
+
+                {/* Join Existing Group shortcut */}
+                {onJoinRoom && (
+                  <>
+                    <div className="my-1 border-t border-md-outline/10" />
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setIsProfileMenuOpen(false);
+                        onJoinRoom();
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-md-primary hover:bg-md-primary/8 transition-colors"
+                    >
+                      <LogIn className="w-4 h-4" />
+                      <span>{t('room.join_title')}</span>
                     </button>
                   </>
                 )}

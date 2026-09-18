@@ -175,6 +175,41 @@ describe('Task 8: Transfers Tab, One-Click Settle-Up, WhatsApp Sharing & Confett
       expect(decoded).toContain('Borc bağlandı');
       expect(decoded).toContain('Rauf Əliyev ➡️ 30 ₼ ➡️ Elvin Məmmədov');
     });
+
+    it('displays error message and does not show success screen when settlement fails', async () => {
+      const onConfirmSettle = vi.fn().mockResolvedValue(false);
+      const onClose = vi.fn();
+
+      renderWithI18n(
+        <SettleDialog
+          isOpen={true}
+          onClose={onClose}
+          transfer={mockTransfers[0]}
+          participants={mockParticipants}
+          currency="₼"
+          onConfirmSettle={onConfirmSettle}
+        />
+      );
+
+      const confirmBtn = screen.getByRole('button', { name: 'Ödənişi təsdiqlə' });
+      fireEvent.click(confirmBtn);
+
+      await waitFor(() => {
+        expect(onConfirmSettle).toHaveBeenCalled();
+      });
+
+      // Confetti should NOT be triggered
+      expect(confetti).not.toHaveBeenCalled();
+
+      // Success heading should NOT be shown
+      expect(screen.queryByRole('heading', { name: 'Borc uğurla bağlandı!' })).not.toBeInTheDocument();
+
+      // Error message should be visible in the dialog
+      expect(screen.getByText(/Yadda saxlanılarkən xəta baş verdi/i)).toBeInTheDocument();
+
+      // Confirm button is still available for retry
+      expect(screen.getByRole('button', { name: 'Ödənişi təsdiqlə' })).toBeInTheDocument();
+    });
   });
 
   // ============================================================

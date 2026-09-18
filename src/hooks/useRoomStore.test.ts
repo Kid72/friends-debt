@@ -205,6 +205,52 @@ describe('useRoomStore Hook', () => {
     expect(result.current.room?.settlements[0].amount).toBe(5);
   });
 
+  it('safely settles debt when room state has undefined settlements property', async () => {
+    const roomWithoutSettlements: any = {
+      id: 'room-no-set',
+      groupName: 'Dostlar',
+      currency: '₼',
+      participants: [
+        { id: 'p1', name: 'Elvin', avatarColor: '#006A60' },
+        { id: 'p2', name: 'Rauf', avatarColor: '#984061' },
+      ],
+      expenses: [],
+      // settlements is intentionally undefined (e.g. legacy room or cache)
+      settlements: undefined,
+      updatedAt: 1000,
+    };
+
+    vi.spyOn(storage, 'fetchRoomState').mockResolvedValue(roomWithoutSettlements);
+    vi.spyOn(storage, 'saveRoomState').mockResolvedValue(true);
+
+    const { result } = renderHook(() => useRoomStore('room-no-set'));
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    let success = false;
+    let thrownError: any = null;
+    try {
+      await act(async () => {
+        success = await result.current.settleDebt({
+          fromParticipantId: 'p2',
+          toParticipantId: 'p1',
+          amount: 15,
+          date: '2026-09-18',
+        });
+      });
+    } catch (err) {
+      thrownError = err;
+    }
+
+    expect(thrownError).toBeNull();
+    expect(success).toBe(true);
+    expect(result.current.room?.settlements).toBeDefined();
+    expect(result.current.room?.settlements.length).toBe(1);
+    expect(result.current.room?.settlements[0].amount).toBe(15);
+  });
+
   it('optimistically deletes a settlement', async () => {
     const roomWithSettlement: RoomState = {
       ...mockInitialRoom,

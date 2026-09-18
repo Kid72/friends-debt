@@ -23,11 +23,19 @@ export async function fetchWithRetry(
         return res;
       }
       lastError = new Error(`HTTP ${res.status}: ${res.statusText}`);
+      if (attempt < retries) {
+        // If throttled by 429 Too Many Requests, back off with a larger delay
+        const delay = res.status === 429
+          ? Math.max(backoffMs, 400) * Math.pow(2, attempt)
+          : backoffMs * Math.pow(2, attempt);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        continue;
+      }
     } catch (err: any) {
       lastError = err;
-    }
-    if (attempt < retries) {
-      await new Promise((resolve) => setTimeout(resolve, backoffMs * Math.pow(2, attempt)));
+      if (attempt < retries) {
+        await new Promise((resolve) => setTimeout(resolve, backoffMs * Math.pow(2, attempt)));
+      }
     }
   }
   throw lastError;
@@ -159,7 +167,15 @@ export function getCachedRoomState(roomId: string): RoomState | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== 'object') return null;
-    return parsed as RoomState;
+    return {
+      id: parsed.id || roomId,
+      groupName: parsed.groupName || 'Dostlar',
+      currency: parsed.currency || '₼',
+      participants: Array.isArray(parsed.participants) ? parsed.participants : [],
+      expenses: Array.isArray(parsed.expenses) ? parsed.expenses : [],
+      settlements: Array.isArray(parsed.settlements) ? parsed.settlements : [],
+      updatedAt: typeof parsed.updatedAt === 'number' ? parsed.updatedAt : Date.now(),
+    };
   } catch {
     return null;
   }
@@ -247,3 +263,43 @@ export function setLastRoomId(roomId: string): void {
     console.warn('Failed to save last room ID to localStorage:', err);
   }
 }
+
+export interface RecentRoom {
+  id: string;
+  name: string;
+  visitedAt: number;
+}
+
+/**
+ * Returns a list of recently visited rooms from localStorage.
+ */
+export function getRecentRooms(): RecentRoom[] {
+  try {
+    const raw = localStorage.getItem(`${STORAGE_PREFIX}recent_rooms`);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Saves or updates a room in the list of recently visited rooms.
+ */
+export function saveRecentRoom(roomId: string, name: string = 'Dostlar'): void {
+  if (!roomId) return;
+  try {
+    const recents = getRecentRooms().filter((r) => r.id !== roomId);
+    recents.unshift({
+      id: roomId,
+      name: name || 'Dostlar',
+      visitedAt: Date.now(),
+    });
+    // Keep at most 10 recent rooms
+    localStorage.setItem(`${STORAGE_PREFIX}recent_rooms`, JSON.stringify(recents.slice(0, 10)));
+  } catch (err) {
+    console.warn('Failed to save recent room:', err);
+  }
+}
+

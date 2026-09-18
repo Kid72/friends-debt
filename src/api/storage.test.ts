@@ -247,5 +247,61 @@ describe('Storage API', () => {
       localStorage.setItem('friends_debt_room_corrupt', '{invalid json');
       expect(getCachedRoomState('corrupt')).toBeNull();
     });
+
+    it('normalizes legacy cached room state by initializing missing arrays', () => {
+      // Legacy room stored before settlements or expenses were present
+      localStorage.setItem(
+        'friends_debt_room_legacy-room',
+        JSON.stringify({
+          id: 'legacy-room',
+          groupName: 'Köhnə Qrup',
+        })
+      );
+
+      const cached = getCachedRoomState('legacy-room');
+      expect(cached).toBeDefined();
+      expect(cached?.id).toBe('legacy-room');
+      expect(cached?.groupName).toBe('Köhnə Qrup');
+      expect(Array.isArray(cached?.participants)).toBe(true);
+      expect(Array.isArray(cached?.expenses)).toBe(true);
+      expect(Array.isArray(cached?.settlements)).toBe(true);
+      expect(cached?.settlements).toEqual([]);
+    });
+  });
+
+  describe('fetchWithRetry', () => {
+    it('retries on HTTP 429 and succeeds when a subsequent attempt returns 200', async () => {
+      const mockState: RoomState = {
+        id: 'retry-room',
+        groupName: 'Retry Group',
+        currency: '₼',
+        participants: [],
+        expenses: [],
+        settlements: [],
+        updatedAt: Date.now(),
+      };
+
+      let callCount = 0;
+      global.fetch = vi.fn().mockImplementation(async () => {
+        callCount++;
+        if (callCount === 1) {
+          return {
+            ok: false,
+            status: 429,
+            statusText: 'Too Many Requests',
+          } as Response;
+        }
+        return {
+          ok: true,
+          status: 200,
+          statusText: 'OK',
+          json: async () => mockState,
+        } as Response;
+      });
+
+      const result = await fetchRoomState('retry-room');
+      expect(result.id).toBe('retry-room');
+      expect(callCount).toBe(2);
+    });
   });
 });

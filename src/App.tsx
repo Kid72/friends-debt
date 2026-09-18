@@ -11,7 +11,7 @@ import {
   PlusCircle,
 } from 'lucide-react';
 import { RoomState, Participant, Expense, SplitMode, SplitItem } from './types';
-import { createRoom, getActiveUserId, setActiveUserId, getLastRoomId, setLastRoomId } from './api/storage';
+import { createRoom, getActiveUserId, setActiveUserId, getLastRoomId, setLastRoomId, saveRecentRoom } from './api/storage';
 import { useRoomStore } from './hooks/useRoomStore';
 import { I18nProvider, useI18n } from './i18n/I18nContext';
 import { Header } from './components/layout/Header';
@@ -26,6 +26,8 @@ import { ExpenseDialog } from './components/dialogs/ExpenseDialog';
 import { ParticipantDialog } from './components/dialogs/ParticipantDialog';
 import { CurrencyDialog } from './components/dialogs/CurrencyDialog';
 import { HelpDialog } from './components/dialogs/HelpDialog';
+import { JoinRoomDialog } from './components/dialogs/JoinRoomDialog';
+import { updatePwaManifest } from './utils/pwa';
 
 export type AppTab = 'transfers' | 'history' | 'hall_of_fame';
 
@@ -104,13 +106,15 @@ export function AppContent() {
   }, [roomId, isProvisioning]);
 
   // Persist roomId to localStorage so the PWA can restore it on home-screen launch.
+  // Update dynamic manifest start_url so "Add to Home Screen" bakes the room into the shortcut.
   // Also sync the URL when the room was restored from localStorage (no ?room= param).
   useEffect(() => {
     if (!roomId) return;
     setLastRoomId(roomId);
+    updatePwaManifest(roomId);
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
-      if (!params.get('room')) {
+      if (params.get('room') !== roomId) {
         const url = new URL(window.location.href);
         url.searchParams.set('room', roomId);
         window.history.replaceState({ path: url.toString() }, '', url.toString());
@@ -148,6 +152,14 @@ export function AppContent() {
     updateCurrency,
     refetch,
   } = useRoomStore(roomId);
+
+  // Keep recent rooms list updated and ensure manifest reflects active room
+  useEffect(() => {
+    if (room && room.id) {
+      saveRecentRoom(room.id, room.groupName);
+      updatePwaManifest(room.id);
+    }
+  }, [room]);
 
   // 3. Active User Profile Management
   const [activeParticipant, setActiveParticipant] = useState<Participant | null>(null);
@@ -214,6 +226,18 @@ export function AppContent() {
   const [isEditGroupNameOpen, setIsEditGroupNameOpen] = useState(false);
   const [newGroupNameInput, setNewGroupNameInput] = useState('');
   const [isConfirmNewRoomOpen, setIsConfirmNewRoomOpen] = useState(false);
+  const [isJoinRoomOpen, setIsJoinRoomOpen] = useState(false);
+
+  // Handle Switch / Join Room
+  const handleJoinRoom = (targetRoomId: string) => {
+    if (!targetRoomId || targetRoomId === roomId) return;
+    setRoomId(targetRoomId);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('room', targetRoomId);
+      window.history.pushState({ path: url.toString() }, '', url.toString());
+    }
+  };
 
   // Open Edit Group Name Dialog
   const handleOpenEditGroupName = () => {
@@ -272,8 +296,8 @@ export function AppContent() {
     toParticipantId: string;
     amount: number;
     date: string;
-  }) => {
-    await settleDebt(settlement);
+  }): Promise<boolean> => {
+    return await settleDebt(settlement);
   };
 
   // Handle Create / Reset to a fresh room
@@ -308,6 +332,7 @@ export function AppContent() {
         onOpenHelp={() => setIsHelpDialogOpen(true)}
         onEditGroupName={handleOpenEditGroupName}
         onCreateNewRoom={room ? () => setIsConfirmNewRoomOpen(true) : undefined}
+        onJoinRoom={() => setIsJoinRoomOpen(true)}
         isSyncing={isSyncing}
       />
 
@@ -616,6 +641,14 @@ export function AppContent() {
           </div>
         </div>
       </Dialog>
+
+      {/* Join / Switch Room Dialog */}
+      <JoinRoomDialog
+        isOpen={isJoinRoomOpen}
+        onClose={() => setIsJoinRoomOpen(false)}
+        onJoin={handleJoinRoom}
+        currentRoomId={roomId || ''}
+      />
     </div>
   );
 }

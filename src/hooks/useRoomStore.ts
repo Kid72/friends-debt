@@ -60,6 +60,8 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
   const activeRoomIdRef = useRef<string | null | undefined>(roomId);
   activeRoomIdRef.current = roomId;
 
+  const isMutatingRef = useRef<boolean>(false);
+
   // Initial fetch when roomId is provided or changes
   useEffect(() => {
     if (!roomId) {
@@ -72,8 +74,10 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
     }
 
     const cached = getCachedRoomState(roomId);
-    setRoom(cached);
-    roomRef.current = cached;
+    if (cached) {
+      setRoom(cached);
+      roomRef.current = cached;
+    }
 
     let isMounted = true;
     setIsLoading(true);
@@ -118,10 +122,11 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
 
     const poll = async () => {
       if (typeof document !== 'undefined' && document.hidden) return;
+      if (isMutatingRef.current) return;
       try {
         setIsSyncing(true);
         const remote = await fetchRoomState(roomId);
-        if (activeRoomIdRef.current === roomId) {
+        if (activeRoomIdRef.current === roomId && !isMutatingRef.current) {
           const currentUpdatedAt = roomRef.current?.updatedAt ?? 0;
           if (remote.updatedAt > currentUpdatedAt || !roomRef.current) {
             setRoom(remote);
@@ -141,7 +146,12 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
 
     const intervalId = setInterval(poll, 10000);
 
+    let lastRevalidate = 0;
     const handleRevalidate = () => {
+      const now = Date.now();
+      // Throttle window focus/online refetches to at most once per 4 seconds
+      if (now - lastRevalidate < 4000) return;
+      lastRevalidate = now;
       poll();
     };
 
@@ -191,10 +201,19 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
       const current = roomRef.current;
       if (!current || !roomId) return false;
 
-      const updatedState = computeNewState(current);
+      let updatedState: RoomState;
+      try {
+        updatedState = computeNewState(current);
+      } catch (err: any) {
+        console.error('Failed to compute new state for mutation:', err);
+        setError('Əməliyyat zamanı xəta baş verdi');
+        return false;
+      }
+
       updatedState.updatedAt = Date.now();
 
       // Optimistic update
+      isMutatingRef.current = true;
       roomRef.current = updatedState;
       setRoom(updatedState);
       setCachedRoomState(roomId, updatedState);
@@ -216,6 +235,8 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
         setError(err?.message || 'Xəta baş verdi, dəyişiklik geri qaytarıldı');
         setIsSyncing(false);
         return false;
+      } finally {
+        isMutatingRef.current = false;
       }
     },
     [roomId]
@@ -234,7 +255,7 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
 
       return performOptimisticMutation((current) => ({
         ...current,
-        expenses: [newExpense, ...current.expenses],
+        expenses: [newExpense, ...(current.expenses || [])],
       }));
     },
     [performOptimisticMutation]
@@ -244,7 +265,7 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
     async (updatedExpense: Expense): Promise<boolean> => {
       return performOptimisticMutation((current) => ({
         ...current,
-        expenses: current.expenses.map((e) => (e.id === updatedExpense.id ? updatedExpense : e)),
+        expenses: (current.expenses || []).map((e) => (e.id === updatedExpense.id ? updatedExpense : e)),
       }));
     },
     [performOptimisticMutation]
@@ -254,7 +275,7 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
     async (expenseId: string): Promise<boolean> => {
       return performOptimisticMutation((current) => ({
         ...current,
-        expenses: current.expenses.filter((e) => e.id !== expenseId),
+        expenses: (current.expenses || []).filter((e) => e.id !== expenseId),
       }));
     },
     [performOptimisticMutation]
@@ -276,7 +297,7 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
 
       return performOptimisticMutation((current) => ({
         ...current,
-        settlements: [newSettlement, ...current.settlements],
+        settlements: [newSettlement, ...(current.settlements || [])],
       }));
     },
     [performOptimisticMutation]
@@ -285,7 +306,8 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
   const addParticipant = useCallback(
     async (participantData: Omit<Participant, 'id'> | Participant): Promise<boolean> => {
       return performOptimisticMutation((current) => {
-        const colorIndex = current.participants.length % DEFAULT_AVATAR_COLORS.length;
+        const participants = current.participants || [];
+        const colorIndex = participants.length % DEFAULT_AVATAR_COLORS.length;
         const newParticipant: Participant = {
           ...participantData,
           id:
@@ -297,7 +319,7 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
         };
         return {
           ...current,
-          participants: [...current.participants, newParticipant],
+          participants: [...participants, newParticipant],
         };
       });
     },
@@ -328,7 +350,7 @@ export function useRoomStore(roomId: string | null | undefined): UseRoomStoreRet
     async (settlementId: string): Promise<boolean> => {
       return performOptimisticMutation((current) => ({
         ...current,
-        settlements: current.settlements.filter((s) => s.id !== settlementId),
+        settlements: (current.settlements || []).filter((s) => s.id !== settlementId),
       }));
     },
     [performOptimisticMutation]

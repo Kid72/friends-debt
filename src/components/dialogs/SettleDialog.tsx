@@ -44,12 +44,14 @@ export const SettleDialog: React.FC<SettleDialogProps> = ({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Reset state when dialog opens or transfer changes
   useEffect(() => {
     if (isOpen) {
       setIsSubmitting(false);
       setIsSuccess(false);
+      setSubmitError(null);
     }
   }, [isOpen, transfer]);
 
@@ -78,14 +80,19 @@ export const SettleDialog: React.FC<SettleDialogProps> = ({
 
   const handleConfirm = async () => {
     setIsSubmitting(true);
+    setSubmitError(null);
     try {
       const todayStr = new Date().toISOString().slice(0, 10);
-      await onConfirmSettle({
+      const res = await onConfirmSettle({
         fromParticipantId: transfer.fromParticipantId,
         toParticipantId: transfer.toParticipantId,
         amount: transfer.amount,
         date: todayStr,
       });
+
+      if (res === false) {
+        throw new Error(t('sync.error') || 'Yadda saxlanılarkən xəta baş verdi');
+      }
 
       // Trigger celebration confetti
       triggerSettlementConfetti();
@@ -100,8 +107,8 @@ export const SettleDialog: React.FC<SettleDialogProps> = ({
       );
 
       setIsSuccess(true);
-    } catch {
-      // In case of error, allow retry
+    } catch (err: any) {
+      setSubmitError(err?.message || t('sync.error') || 'Yadda saxlanılarkən xəta baş verdi');
     } finally {
       setIsSubmitting(false);
     }
@@ -184,6 +191,14 @@ export const SettleDialog: React.FC<SettleDialogProps> = ({
               amount: formattedAmount,
             })}
           </p>
+
+          {/* Error Notice */}
+          {submitError && (
+            <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-3 text-xs text-rose-600 dark:text-rose-400 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0 animate-pulse" />
+              <span>{submitError}</span>
+            </div>
+          )}
 
           {/* Action Buttons */}
           <div className="flex items-center justify-end gap-3 pt-2">
